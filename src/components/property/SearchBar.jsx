@@ -34,7 +34,7 @@ export default function SearchBar({ variant = 'hero', onDone }) {
     if (intent === 'sell') return navigate('/sell-your-property')
     const params = toParams({ ...DEFAULT_FILTERS, segment, locality, category, budget })
     const qs = params.toString()
-    navigate(`/buy-property${qs ? `?${qs}` : ''}`)
+    navigate(`/properties${qs ? `?${qs}` : ''}`)
   }
 
   return (
@@ -45,15 +45,15 @@ export default function SearchBar({ variant = 'hero', onDone }) {
     >
       <Cell label="I want to" stacked={stacked}>
         <select className={selectCls} value={intent} onChange={(e) => setIntent(e.target.value)}>
-          <option value="buy">Buy Property</option>
-          <option value="sell">Sell Property</option>
+          <option value="buy">Find PG / Rent</option>
+          <option value="sell">List My Property</option>
         </select>
       </Cell>
       <Cell label="Category" stacked={stacked}>
         <select className={selectCls} value={segment} onChange={(e) => { setSegment(e.target.value); setCategory('') }} disabled={intent === 'sell'}>
           <option value="">All categories</option>
-          <option value="residential">Residential</option>
-          <option value="commercial">Commercial</option>
+          <option value="pg">PG & Hostels</option>
+          <option value="rent">Rooms, Flats & Houses</option>
         </select>
       </Cell>
       <Cell label="Locality" stacked={stacked}>
@@ -68,7 +68,7 @@ export default function SearchBar({ variant = 'hero', onDone }) {
           {typeOptions.map((c) => <option key={c.slug} value={c.slug}>{c.label}</option>)}
         </select>
       </Cell>
-      <Cell label="Budget" stacked={stacked}>
+      <Cell label="Monthly Budget" stacked={stacked}>
         <select className={selectCls} value={budget} onChange={(e) => setBudget(e.target.value)} disabled={intent === 'sell'}>
           {BUDGETS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
         </select>

@@ -16,7 +16,9 @@ function PropertyCard({ property: p, view = 'grid' }) {
   const saved = isSaved(p.id)
   const list = view === 'list'
   const href = `/property/${p.slug}`
-  const specs = [p.bhk > 0 && `${p.bhk} BHK`, p.bathrooms > 0 && `${p.bathrooms} Bath`, formatArea(p.areaSqft)].filter(Boolean)
+  const specs = p.sharing
+    ? [p.propertyType, `${p.sharing.join(' / ')} sharing`, p.food ? 'Meals included' : 'No meals']
+    : [p.propertyType, formatArea(p.areaSqft), p.furnishing].filter(Boolean)
 
   return (
     <motion.article layout="position" className={`group ${list ? 'sm:flex sm:gap-6' : ''}`}>
@@ -44,7 +46,7 @@ function PropertyCard({ property: p, view = 'grid' }) {
 
       <div className={`flex flex-1 flex-col ${list ? 'py-1' : 'pt-4'}`}>
         <div className="flex items-baseline justify-between gap-3">
-          <p className="font-display text-2xl text-forest">{formatPrice(p.price)}</p>
+          <p className="font-display text-2xl text-forest">{formatPrice(p.price)}<span className="font-sans text-xs font-normal text-muted"> /month{p.sharing ? ' · per bed' : ''}</span></p>
           <span className="text-xs text-muted">{timeAgo(p.listedAt)}</span>
         </div>
         <h3 className="mt-1.5 font-sans text-[0.98rem] font-medium leading-snug tracking-normal text-charcoal">
@@ -54,7 +56,7 @@ function PropertyCard({ property: p, view = 'grid' }) {
         {list && <p className="mt-3 line-clamp-2 text-sm text-muted">{p.description}</p>}
         <div className="mt-4 flex items-center gap-5 text-sm font-semibold">
           <Link to={href} className="link-underline pb-0.5 text-forest">View Details</Link>
-          <button onClick={() => setContact(true)} className="link-underline pb-0.5 text-muted hover:text-forest">Contact Seller</button>
+          <button onClick={() => setContact(true)} className="link-underline pb-0.5 text-muted hover:text-forest">Contact Owner</button>
         </div>
       </div>
       <ContactModal open={contact} onClose={() => setContact(false)} property={p} />

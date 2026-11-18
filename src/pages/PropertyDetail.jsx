@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { Bath, BedDouble, Check, Compass, Heart, Layers, Maximize, MessageCircle, Phone, Share2, ShieldCheck, Sofa, Sparkles, Info } from 'lucide-react'
+import { Bath, BedDouble, Check, Compass, Heart, Layers, Maximize, MessageCircle, Phone, Share2, ShieldCheck, Sofa, Sparkles, Info, Users, UtensilsCrossed, Wallet } from 'lucide-react'
 import { SITE } from '../config/site'
 import { getCategory } from '../data/categories'
 import { locations } from '../data/locations'
@@ -9,7 +9,7 @@ import { useAsync } from '../hooks/useAsync'
 import { useSeo } from '../hooks/useSeo'
 import { useApp } from '../context/AppContext'
 import { getProperty, getSimilar, pushRecent } from '../services/api'
-import { formatArea, formatDate, formatPrice, pricePerSqft } from '../utils/format'
+import { formatArea, formatDate, formatPrice } from '../utils/format'
 import { imgSrc } from '../utils/image'
 import { Badge, Breadcrumbs, SectionHead } from '../components/ui/Bits'
 import { Button, LinkButton } from '../components/ui/Button'
@@ -50,8 +50,8 @@ function Detail({ p }) {
   useEffect(() => pushRecent(p.id), [p.id])
 
   useSeo({
-    title: `${p.title} – ${formatPrice(p.price)}`,
-    description: `${p.propertyType} for sale in ${loc?.name}, Kota. ${formatArea(p.areaSqft)}, ${formatPrice(p.price)}. ${p.description.slice(0, 110)}…`,
+    title: `${p.title} – ${formatPrice(p.price)}/month`,
+    description: `${p.propertyType} for rent in ${loc?.name}, Kota from ${formatPrice(p.price)}/month. ${p.description.slice(0, 110)}…`,
     path: `/property/${p.slug}`,
     image: imgSrc(p.images[0], 1200),
     type: 'article',
@@ -59,7 +59,7 @@ function Detail({ p }) {
       {
         '@context': 'https://schema.org', '@type': 'RealEstateListing', name: p.title, description: p.description, url,
         image: p.images.map((i) => imgSrc(i, 1200)), datePosted: p.listedAt,
-        offers: { '@type': 'Offer', price: p.price, priceCurrency: 'INR', availability: 'https://schema.org/InStock' },
+        offers: { '@type': 'Offer', price: p.price, priceCurrency: 'INR', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'INR', unitText: 'MONTH' } },
         address: { '@type': 'PostalAddress', addressLocality: loc?.name, addressRegion: 'Rajasthan', addressCountry: 'IN' },
         floorSize: { '@type': 'QuantitativeValue', value: p.areaSqft, unitCode: 'FTK' },
       },
@@ -83,8 +83,11 @@ function Detail({ p }) {
 
   const specs = [
     p.bhk > 0 && { icon: BedDouble, label: 'Bedrooms', value: `${p.bhk} BHK` },
+    p.gender && { icon: Users, label: 'Suitable for', value: p.gender },
+    p.sharing && { icon: UtensilsCrossed, label: 'Meals', value: p.food ? 'Included' : 'Not included' },
     p.bathrooms > 0 && { icon: Bath, label: 'Bathrooms', value: p.bathrooms },
-    { icon: Maximize, label: 'Area', value: formatArea(p.areaSqft) },
+    p.deposit && { icon: Wallet, label: 'Security deposit', value: formatPrice(p.deposit) },
+    { icon: Maximize, label: p.sharing ? 'Room size' : 'Area', value: formatArea(p.areaSqft) },
     p.floor && { icon: Layers, label: 'Floor', value: p.floor },
     p.facing && { icon: Compass, label: 'Facing', value: p.facing },
     p.furnishing && { icon: Sofa, label: 'Furnishing', value: p.furnishing },
@@ -92,7 +95,7 @@ function Detail({ p }) {
 
   const rows = [
     ['Property type', p.propertyType], ['Status', p.status], ['Locality', `${loc?.name}, Kota`], ['Listed on', formatDate(p.listedAt)],
-    ['Listed by', `${p.seller.name} (${p.seller.type})`], ['Reference ID', p.id], ['Price per sq. ft.', pricePerSqft(p.price, p.areaSqft) || '—'],
+    ['Listed by', `${p.seller.name} (${p.seller.type})`], ['Reference ID', p.id],
   ]
 
   return (
@@ -117,8 +120,8 @@ function Detail({ p }) {
                 <p className="mt-2 text-muted">{p.address}</p>
               </div>
               <div className="text-right">
-                <p className="font-display text-4xl text-forest">{formatPrice(p.price)}</p>
-                {pricePerSqft(p.price, p.areaSqft) && <p className="mt-1 text-xs text-muted">{pricePerSqft(p.price, p.areaSqft)}</p>}
+                <p className="font-display text-4xl text-forest">{formatPrice(p.price)}<span className="font-sans text-base font-normal text-muted"> /month</span></p>
+                <p className="mt-1 text-xs text-muted">{p.sharing ? 'per month, per bed (from)' : 'per month'}{p.deposit ? ' · Deposit '+formatPrice(p.deposit) : ''}</p>
               </div>
             </div>
 
@@ -128,6 +131,17 @@ function Detail({ p }) {
             </div>
 
             <div className="mt-8 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">{specs.map((s) => <Spec key={s.label} {...s} />)}</div>
+
+            {p.sharingPrices && (
+              <section className="mt-12">
+                <h2 className="text-2xl text-forest">Rent per bed</h2>
+                <dl className="mt-5 divide-y divide-line border border-line bg-white">
+                  {Object.entries(p.sharingPrices).sort((a, b) => b[1] - a[1]).map(([k, v]) => (
+                    <div key={k} className="flex items-center justify-between px-5 py-3.5 text-sm"><dt className="font-medium text-forest">{k} sharing</dt><dd className="font-display text-xl text-forest">{formatPrice(v)}<span className="font-sans text-xs text-muted"> /month</span></dd></div>
+                  ))}
+                </dl>
+              </section>
+            )}
 
             <section className="mt-12">
               <h2 className="text-2xl text-forest">About this property</h2>
@@ -152,14 +166,14 @@ function Detail({ p }) {
 
             <section className="mt-12">
               <h2 className="text-2xl text-forest">Location</h2>
-              <p className="mt-2 text-sm text-muted">Showing the general area of {loc?.name}, Kota. Exact address is shared by the seller on enquiry.</p>
+              <p className="mt-2 text-sm text-muted">Showing the general area of {loc?.name}, Kota. Exact address is shared by the owner on enquiry.</p>
               <div className="mt-5 aspect-[16/8] overflow-hidden border border-line bg-stone">
                 <iframe title={`Map of ${loc?.name}, Kota`} src={`https://www.google.com/maps?q=${encodeURIComponent(loc?.query || 'Kota, Rajasthan')}&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-full w-full border-0" />
               </div>
             </section>
 
             {p.demo && (
-              <p className="mt-10 flex gap-3 border border-line bg-white p-4 text-xs leading-relaxed text-muted"><Info size={16} className="mt-0.5 shrink-0 text-gold-deep" />This is a sample listing used to demonstrate the platform. Details, photos and pricing are illustrative and not an offer for sale.</p>
+              <p className="mt-10 flex gap-3 border border-line bg-white p-4 text-xs leading-relaxed text-muted"><Info size={16} className="mt-0.5 shrink-0 text-gold-deep" />This is a sample listing used to demonstrate the platform. Details, photos and pricing are illustrative and not an offer to rent.</p>
             )}
           </div>
 

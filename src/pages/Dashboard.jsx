@@ -34,7 +34,7 @@ function Saved() {
       {data?.length ? (
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{data.map((p) => <PropertyCard key={p.id} property={p} />)}</div>
       ) : (
-        <EmptyState icon={Heart} title="No saved properties yet" message="Tap the heart on any property to save it here for later." actionLabel="Browse properties" actionTo="/buy-property" />
+        <EmptyState icon={Heart} title="No saved listings yet" message="Tap the heart on any property to save it here for later." actionLabel="Browse listings" actionTo="/properties" />
       )}
       {recent.data?.length > 0 && (
         <div>
@@ -48,7 +48,7 @@ function Saved() {
 
 function Listings({ user }) {
   const [items, setItems] = useState(() => getSubmissions(user.id))
-  if (!items.length) return <EmptyState icon={LayoutGrid} title="You haven’t submitted any property" message="List a property and track its review status here." actionLabel="Sell your property" actionTo="/sell-your-property" />
+  if (!items.length) return <EmptyState icon={LayoutGrid} title="You haven’t listed anything yet" message="List a PG or rental and track its review status here." actionLabel="List your property" actionTo="/sell-your-property" />
   return (
     <div className="space-y-4">
       {items.map((s) => (
@@ -56,7 +56,7 @@ function Listings({ user }) {
           <div className="h-24 w-full shrink-0 bg-stone sm:w-36">{s.images?.[0] && <img src={s.images[0]} alt="" className="h-full w-full object-cover" />}</div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2"><h3 className="font-sans text-base font-semibold tracking-normal text-forest">{s.title}</h3><Badge tone="gold">{s.status}</Badge></div>
-            <p className="mt-1 text-sm text-muted">{categories.find((c) => c.slug === s.category)?.label} · {localityName(s.locality)} · {formatPrice(s.price)} · {s.areaSqft} sq. ft.</p>
+            <p className="mt-1 text-sm text-muted">{categories.find((c) => c.slug === s.category)?.label} · {localityName(s.locality)} · {formatPrice(s.price)} · per month</p>
             <p className="mt-1 text-xs text-muted">Submitted {formatDate(s.createdAt)}</p>
           </div>
           <Button variant="ghost" size="sm" onClick={() => { deleteSubmission(s.id); setItems((x) => x.filter((i) => i.id !== s.id)); toast.success('Submission removed') }}><Trash2 size={15} /> Remove</Button>
@@ -68,7 +68,7 @@ function Listings({ user }) {
 
 function Enquiries({ user }) {
   const items = getEnquiries(user.id)
-  if (!items.length) return <EmptyState icon={Inbox} title="No enquiries yet" message="Enquiries you send to sellers will be listed here." actionLabel="Browse properties" actionTo="/buy-property" />
+  if (!items.length) return <EmptyState icon={Inbox} title="No enquiries yet" message="Enquiries you send to owners will be listed here." actionLabel="Browse listings" actionTo="/properties" />
   return (
     <div className="divide-y divide-line border border-line bg-white">
       {items.map((e) => (
@@ -130,7 +130,7 @@ export default function Dashboard() {
             ))}
             <button onClick={logout} className="flex shrink-0 items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-forest hover:bg-stone"><LogOut size={17} /> Log out</button>
           </nav>
-          <div className="mt-5 hidden lg:block"><LinkButton to="/sell-your-property" variant="gold" className="w-full">Sell Your Property</LinkButton></div>
+          <div className="mt-5 hidden lg:block"><LinkButton to="/sell-your-property" variant="gold" className="w-full">List Your Property</LinkButton></div>
         </aside>
         <div>
           <h2 className="mb-6 text-3xl text-forest">{TABS.find((t) => t.id === tab).label}</h2>

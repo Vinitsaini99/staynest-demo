@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Home from './pages/Home'
 import { Skeleton } from './components/ui/States'
+import { listingPages } from './data/categories'
 
 const lazyNamed = (loader, name) => lazy(() => loader().then((m) => ({ default: m[name] })))
 
@@ -21,7 +22,7 @@ const Privacy = lazyNamed(() => import('./pages/Legal'), 'Privacy')
 const Terms = lazyNamed(() => import('./pages/Legal'), 'Terms')
 const NotFound = lazy(() => import('./pages/NotFound'))
 
-const listingPaths = ['/buy-property', '/residential', '/commercial', '/flats-apartments', '/houses-villas', '/residential-plots', '/commercial-shops-offices', '/plots-and-land']
+const listingPaths = listingPages.map((p) => p.path)
 
 const Fallback = () => (
   <div className="container-x py-16"><Skeleton className="h-10 w-1/3" /><Skeleton className="mt-6 h-64 w-full" /></div>
@@ -47,7 +48,7 @@ export default function App() {
           <Route path="/insights/:slug" element={<Article />} />
           <Route path="/privacy-policy" element={<Privacy />} />
           <Route path="/terms-and-conditions" element={<Terms />} />
-          <Route path="/properties" element={<Navigate to="/buy-property" replace />} />
+          <Route path="/buy-property" element={<Navigate to="/properties" replace />} />
           <Route path="/sell" element={<Navigate to="/sell-your-property" replace />} />
           <Route path="*" element={<NotFound />} />
         </Route>

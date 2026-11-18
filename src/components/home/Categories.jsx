@@ -9,7 +9,7 @@ export default function Categories() {
   const { byCategory } = getCounts()
   return (
     <section className="container-x py-20 md:py-28">
-      <SectionHead eyebrow="Browse by category" title="Every kind of property" />
+      <SectionHead eyebrow="Browse by category" title="Find the right stay" />
       <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4 lg:grid-cols-7">
         {categories.map((c, i) => {
           const count = byCategory[c.slug]

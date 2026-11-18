@@ -16,16 +16,16 @@ import SellForm from '../property/SellForm'
 const reasons = [
   { icon: ShieldCheck, title: 'Verified-listing badges', text: 'Listings that pass our document checks carry a Verified badge, so you know where to look first.' },
   { icon: MapPinned, title: 'Rooted in Kota', text: 'Organised around Kota’s real localities, with practical notes on each neighbourhood.' },
-  { icon: Wallet, title: 'Transparent pricing', text: 'Prices, area and price-per-sq.-ft. are shown upfront — no hidden surprises while you compare.' },
-  { icon: Handshake, title: 'Direct seller contact', text: 'Call, WhatsApp or send an enquiry straight to the owner or listing desk.' },
-  { icon: FileCheck2, title: 'Clear property details', text: 'Specifications, amenities, status and location in a consistent, easy-to-scan format.' },
-  { icon: Headset, title: 'Help when you need it', text: 'Our team is available during office hours to guide you from shortlist to site visit.' },
+  { icon: Wallet, title: 'Honest monthly pricing', text: 'Rent, security deposit and what is included are shown upfront — no hidden surprises while you compare.' },
+  { icon: Handshake, title: 'Direct owner contact', text: 'Call, WhatsApp or send an enquiry straight to the owner or listing desk.' },
+  { icon: FileCheck2, title: 'Clear details', text: 'Sharing options, meals, amenities and location in a consistent, easy-to-scan format.' },
+  { icon: Headset, title: 'Help when you need it', text: 'Our team is available during office hours to guide you from shortlist to move-in.' },
 ]
 
 export function WhyChoose() {
   return (
     <section className="container-x py-20 md:py-28">
-      <SectionHead eyebrow="Why Kota Ki Property" title="A calmer, clearer way to buy and sell property" />
+      <SectionHead eyebrow="Why Kota Ki Property" title="A calmer, clearer way to find your stay" />
       <div className="grid gap-x-12 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
         {reasons.map(({ icon: Icon, title, text }, i) => (
           <Reveal key={title} delay={(i % 3) * 0.06}>
@@ -44,15 +44,15 @@ export function Showcase() {
     <section className="container-x pb-20 md:pb-28">
       <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <Reveal>
-          <div className="img-zoom aspect-[4/3] bg-stone"><img src={imgSrc('1600596542815-ffad4c1539a9', 1200, 900)} alt="Modern villa exterior" loading="lazy" className="h-full w-full object-cover" /></div>
+          <div className="img-zoom aspect-[4/3] bg-stone"><img src={imgSrc('1555854877-bab0e564b8d5', 1200, 900)} alt="Comfortable shared room with study space" loading="lazy" className="h-full w-full object-cover" /></div>
         </Reveal>
         <Reveal delay={0.1}>
-          <p className="eyebrow">The premium collection</p>
-          <h2 className="mt-4 text-3xl leading-tight text-forest md:text-[2.6rem]">Residences designed for how you live</h2>
+          <p className="eyebrow">Made for students</p>
+          <h2 className="mt-4 text-3xl leading-tight text-forest md:text-[2.6rem]">Comfortable stays that respect your budget</h2>
           <p className="mt-5 leading-relaxed text-muted">
-            Landscaped villas, light-filled apartments and plots in planned townships — homes chosen for space, layout and neighbourhood.
+            Study-friendly PGs with meals and Wi-Fi, safe girls PGs and simple hostels near coaching hubs — all with the monthly rent clearly shown.
           </p>
-          <LinkButton to="/houses-villas" variant="primary" size="lg" className="mt-8">Explore Villas &amp; Houses</LinkButton>
+          <LinkButton to="/pg-hostels" variant="primary" size="lg" className="mt-8">Explore PG &amp; Hostels</LinkButton>
         </Reveal>
       </div>
     </section>
@@ -64,11 +64,11 @@ export function SellSection() {
     <section id="sell" className="bg-stone/60">
       <div className="container-x grid gap-12 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
         <Reveal>
-          <p className="eyebrow">Sell your property</p>
-          <h2 className="mt-4 text-4xl leading-tight text-forest md:text-[2.8rem]">Have a Property in Kota? Let’s Find Its Buyer.</h2>
-          <p className="mt-6 max-w-md leading-relaxed text-muted">Share a few details and photos. Our team reviews every submission before it goes live, and buyers contact you directly.</p>
+          <p className="eyebrow">For owners</p>
+          <h2 className="mt-4 text-4xl leading-tight text-forest md:text-[2.8rem]">Have a PG or rental in Kota? Let’s find your tenants.</h2>
+          <p className="mt-6 max-w-md leading-relaxed text-muted">Share a few details and photos. Our team reviews every submission before it goes live, and tenants contact you directly.</p>
           <ol className="mt-8 space-y-4">
-            {['Fill in the property details', 'We review and verify the listing', 'Receive enquiries from genuine buyers'].map((t, i) => (
+            {['Fill in the property details', 'We review and verify the listing', 'Receive enquiries from genuine tenants'].map((t, i) => (
               <li key={t} className="flex items-center gap-4 text-sm font-medium text-forest">
                 <span className="grid h-8 w-8 place-items-center border border-forest font-display text-sm">{i + 1}</span>{t}
               </li>
@@ -82,9 +82,9 @@ export function SellSection() {
 }
 
 const steps = [
-  { icon: Search, title: 'Discover Properties', text: 'Search by locality, budget and type, then compare options side by side.' },
-  { icon: Handshake, title: 'Connect With Sellers', text: 'Enquire, call or message on WhatsApp to get answers and arrange a visit.' },
-  { icon: Home, title: 'Visit & Buy Your Property', text: 'Inspect in person, verify the documents and close with confidence.' },
+  { icon: Search, title: 'Find a Stay', text: 'Search by locality, monthly budget and type, then compare options side by side.' },
+  { icon: Handshake, title: 'Talk to the Owner', text: 'Enquire, call or message on WhatsApp to get answers and arrange a visit.' },
+  { icon: Home, title: 'Visit & Move In', text: 'See the place in person, check the rent agreement and move in with confidence.' },
 ]
 
 export function HowItWorks() {
@@ -180,7 +180,7 @@ export function InsightsRow() {
   return (
     <section className="container-x py-20 md:py-28">
       <SectionHead
-        eyebrow="Real estate insights" title="Guides for smarter property decisions"
+        eyebrow="Guides" title="Helpful reads for tenants and owners"
         action={<Link to="/insights" className="link-underline inline-flex items-center gap-2 pb-0.5 text-sm font-semibold text-forest">All articles <ArrowRight size={15} /></Link>}
       />
       <div className="grid gap-8 md:grid-cols-3">
@@ -209,7 +209,7 @@ export function CtaBand() {
         </div>
         <div className="flex flex-wrap gap-3">
           <LinkButton to="/contact-us" variant="gold" size="lg">Talk to Our Team</LinkButton>
-          <LinkButton to="/buy-property" variant="outlineLight" size="lg">Browse Properties</LinkButton>
+          <LinkButton to="/properties" variant="outlineLight" size="lg">Browse Listings</LinkButton>
         </div>
       </div>
     </section>

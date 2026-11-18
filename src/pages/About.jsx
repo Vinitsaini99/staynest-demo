@@ -7,25 +7,25 @@ import Reveal from '../components/ui/Reveal'
 import { LinkButton } from '../components/ui/Button'
 
 const values = [
-  { icon: Eye, t: 'Clarity', d: 'Prices, areas and details presented plainly, so comparing is effortless.' },
+  { icon: Eye, t: 'Clarity', d: 'Rents, deposits and details presented plainly, so comparing is effortless.' },
   { icon: Scale, t: 'Integrity', d: 'We label what is verified and what is not, and never overstate a listing.' },
-  { icon: Handshake, t: 'Respect for your time', d: 'Direct, quick connections between buyers and sellers.' },
-  { icon: Gem, t: 'Quality', d: 'A thoughtful platform for properties that deserve to be presented well.' },
+  { icon: Handshake, t: 'Respect for your time', d: 'Direct, quick connections between tenants and owners.' },
+  { icon: Gem, t: 'Quality', d: 'A thoughtful platform for every stay, from a shared bed to a family home.' },
 ]
 
 export default function About() {
-  useSeo({ title: 'About Us', description: `${SITE.name} is a Kota-focused real estate platform for buying and selling residential and commercial property in Rajasthan.`, path: '/about-us' })
+  useSeo({ title: 'About Us', description: `${SITE.name} is a Kota-focused platform for finding affordable PGs, hostels and rental homes in Rajasthan.`, path: '/about-us' })
   return (
     <>
-      <PageHero eyebrow="About us" title="A property platform built around Kota" intro={SITE.tagline} crumbs={[{ label: 'Home', to: '/' }, { label: 'About Us' }]} />
+      <PageHero eyebrow="About us" title="Affordable stays, built around Kota" intro={SITE.tagline} crumbs={[{ label: 'Home', to: '/' }, { label: 'About Us' }]} />
       <section className="container-x grid items-center gap-12 py-16 md:py-24 lg:grid-cols-2">
         <Reveal>
           <p className="eyebrow">Our story</p>
-          <h2 className="mt-4 text-4xl leading-tight text-forest">Property decisions deserve clarity</h2>
+          <h2 className="mt-4 text-4xl leading-tight text-forest">Finding a place to stay should be simple</h2>
           <div className="prose-kkp mt-6">
-            <p>Kota is a city of constant movement — families putting down roots, professionals relocating, and investors looking at a growing market. Yet finding reliable property information has often meant scattered listings and unclear details.</p>
-            <p>{SITE.name} was created to change that. We bring residential and commercial listings together in one well-organised place, organised by the localities people actually search, with the details that matter shown upfront.</p>
-            <p>Whether you are buying your first flat, selling a family home or evaluating commercial land, our aim is to make the journey simpler and more transparent.</p>
+            <p>Kota is a city of constant movement — thousands of students arriving every year, along with families and professionals making it home. Yet finding a good PG or rental has often meant scattered listings, unclear rents and wasted trips.</p>
+            <p>{SITE.name} was created to change that. We bring PGs, hostels, rooms and rentals together in one well-organised place, organised by the localities people actually search, with the monthly rent and what is included shown upfront.</p>
+            <p>Whether you are a student looking for a PG, a family searching for a flat or an owner with a room to rent, our aim is to make it simpler and more transparent.</p>
           </div>
         </Reveal>
         <Reveal delay={0.1}>
@@ -44,10 +44,10 @@ export default function About() {
         </div>
       </section>
       <section className="container-x py-16 text-center md:py-20">
-        <h2 className="mx-auto max-w-2xl text-3xl text-forest md:text-4xl">Ready to find or list a property in Kota?</h2>
+        <h2 className="mx-auto max-w-2xl text-3xl text-forest md:text-4xl">Looking for a stay, or have one to rent out?</h2>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <LinkButton to="/buy-property" size="lg">Browse Properties</LinkButton>
-          <LinkButton to="/sell-your-property" variant="outline" size="lg">Sell Your Property</LinkButton>
+          <LinkButton to="/properties" size="lg">Browse Listings</LinkButton>
+          <LinkButton to="/sell-your-property" variant="outline" size="lg">List Your Property</LinkButton>
         </div>
       </section>
     </>

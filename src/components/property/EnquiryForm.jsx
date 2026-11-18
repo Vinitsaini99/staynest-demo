@@ -81,7 +81,7 @@ export default function EnquiryForm({ property, onSent, compact = false }) {
 
 export function ContactModal({ open, onClose, property }) {
   return (
-    <Modal open={open} onClose={onClose} title={property ? 'Contact Seller' : 'Enquire Now'}>
+    <Modal open={open} onClose={onClose} title={property ? 'Contact Owner' : 'Enquire Now'}>
       {property && (
         <div className="mb-5 border-l-2 border-gold bg-white px-4 py-3 text-sm">
           <p className="font-semibold text-forest">{property.title}</p>

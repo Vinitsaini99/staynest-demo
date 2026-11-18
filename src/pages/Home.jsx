@@ -8,21 +8,21 @@ import { WhyChoose, Showcase, SellSection, HowItWorks, Testimonials, InsightsRow
 
 export default function Home() {
   useSeo({
-    title: 'Property for Sale in Kota, Rajasthan | Kota Ki Property',
-    description: 'Buy and sell flats, houses, villas, plots and commercial property in Kota, Rajasthan. Browse verified listings across Talwandi, Kunhari, Vigyan Nagar, Landmark City and more.',
+    title: 'PG & Rooms for Rent in Kota, Rajasthan | Kota Ki Property',
+    description: 'Find affordable PGs, hostels, rooms, flats and houses for rent in Kota, Rajasthan. Browse listings across Talwandi, Kunhari, Vigyan Nagar, Landmark City and more.',
     path: '/',
     jsonLd: {
       '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url,
-      potentialAction: { '@type': 'SearchAction', target: `${SITE.url}/buy-property?q={search_term_string}`, 'query-input': 'required name=search_term_string' },
+      potentialAction: { '@type': 'SearchAction', target: `${SITE.url}/properties?q={search_term_string}`, 'query-input': 'required name=search_term_string' },
     },
   })
   return (
     <>
       <Hero />
       <Categories />
-      <PropertyRow mode="featured" eyebrow="Featured properties" title="Handpicked residences & spaces" intro="A curated selection of standout listings across Kota." bg="bg-white border-y border-line" />
+      <PropertyRow mode="featured" eyebrow="Featured listings" title="Handpicked PGs & rentals" intro="Standout stays across Kota, priced for real budgets." bg="bg-white border-y border-line" />
       <LocationsGrid />
-      <PropertyRow mode="recent" eyebrow="Recently listed" title="Fresh on the market" intro="The latest properties added to Kota Ki Property." />
+      <PropertyRow mode="recent" eyebrow="Recently listed" title="Recently listed" intro="The latest PGs and rentals added to Kota Ki Property." />
       <WhyChoose />
       <Showcase />
       <SellSection />

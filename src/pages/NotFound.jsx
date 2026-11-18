@@ -8,10 +8,10 @@ export default function NotFound() {
       <div>
         <p className="font-display text-8xl text-gold">404</p>
         <h1 className="mt-4 text-3xl text-forest">This page has moved out</h1>
-        <p className="mx-auto mt-3 max-w-md text-muted">The page you’re looking for doesn’t exist or may have been removed. Let’s get you back to Kota’s best properties.</p>
+        <p className="mx-auto mt-3 max-w-md text-muted">The page you’re looking for doesn’t exist or may have been removed. Let’s get you back to Kota’s best PGs and rentals.</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <LinkButton to="/" variant="primary">Back to Home</LinkButton>
-          <LinkButton to="/buy-property" variant="outline">Browse Properties</LinkButton>
+          <LinkButton to="/properties" variant="outline">Browse Listings</LinkButton>
         </div>
       </div>
     </section>

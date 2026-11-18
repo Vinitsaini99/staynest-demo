@@ -1,13 +1,11 @@
-const trim = (n) => String(Math.round(n * 100) / 100)
-
-// 5800000 -> "₹58 Lakh", 13500000 -> "₹1.35 Cr"
+// Monthly rent: 6500 -> "₹6,500"
 export function formatPrice(value) {
   const n = Number(value)
   if (!Number.isFinite(n) || n <= 0) return 'Price on request'
-  if (n >= 10000000) return `₹${trim(n / 10000000)} Cr`
-  if (n >= 100000) return `₹${trim(n / 100000)} Lakh`
   return `₹${n.toLocaleString('en-IN')}`
 }
+
+export const formatRent = (value) => `${formatPrice(value)}/month`
 
 export function formatRupees(value) {
   return `₹${Number(value || 0).toLocaleString('en-IN')}`

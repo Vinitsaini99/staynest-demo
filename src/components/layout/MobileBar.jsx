@@ -16,7 +16,7 @@ export default function MobileBar() {
         <button className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[0.65rem] font-semibold text-muted" onClick={() => setSearchOpen(true)}><Search size={19} />Search</button>
         <NavLink to="/sell-your-property" className={item}>
           <span className="-mt-5 grid h-11 w-11 place-items-center bg-gold text-forest shadow-lg"><PlusSquare size={20} /></span>
-          Sell
+          List
         </NavLink>
         <NavLink to="/dashboard?tab=saved" className={item}>
           <Heart size={19} />

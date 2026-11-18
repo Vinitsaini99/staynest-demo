@@ -47,8 +47,8 @@ export default function SellForm({ onDone }) {
       title: [required('Property title'), minLen('Title', 8)],
       category: [required('Property type')],
       locality: [required('Location')],
-      price: [required('Expected price'), positiveNumber('price')],
-      areaSqft: [required('Area'), positiveNumber('area')],
+      price: [required('Monthly rent'), positiveNumber('rent')],
+      areaSqft: [(v) => (v && !(Number(v) > 0) ? 'Enter a valid area' : '')],
       description: [required('Description'), minLen('Description', 20)],
     })
     setErrors(errs)
@@ -58,7 +58,7 @@ export default function SellForm({ onDone }) {
     }
     setBusy(true)
     try {
-      await submitProperty({ ...values, phone: cleanPhone(values.phone), price: Number(values.price), areaSqft: Number(values.areaSqft), images }, user?.id || null)
+      await submitProperty({ ...values, phone: cleanPhone(values.phone), price: Number(values.price), areaSqft: Number(values.areaSqft) || null, images }, user?.id || null)
       setDone(true)
       toast.success('Property submitted for review')
       onDone?.()
@@ -91,16 +91,16 @@ export default function SellForm({ onDone }) {
         <Input label="Owner name" required value={values.ownerName} onChange={set('ownerName')} error={errors.ownerName} autoComplete="name" />
         <Input label="Mobile number" required type="tel" inputMode="numeric" value={values.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" placeholder="10-digit number" />
       </div>
-      <Input label="Property title" required value={values.title} onChange={set('title')} error={errors.title} placeholder="e.g. 3 BHK Apartment in Talwandi" maxLength={90} />
+      <Input label="Property title" required value={values.title} onChange={set('title')} error={errors.title} placeholder="e.g. Boys PG with meals in Talwandi" maxLength={90} />
       <div className="grid gap-5 sm:grid-cols-2">
         <Select label="Property type" required value={values.category} onChange={set('category')} error={errors.category} placeholder="Select type" options={categories.map((c) => ({ value: c.slug, label: c.label }))} />
         <Select label="Location" required value={values.locality} onChange={set('locality')} error={errors.locality} placeholder="Select locality" options={locations.map((l) => ({ value: l.slug, label: l.name }))} />
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
-        <Input label="Expected price (₹)" required type="number" min="0" inputMode="numeric" value={values.price} onChange={set('price')} error={errors.price} placeholder="e.g. 4500000" />
-        <Input label="Area (sq. ft.)" required type="number" min="0" inputMode="numeric" value={values.areaSqft} onChange={set('areaSqft')} error={errors.areaSqft} placeholder="e.g. 1200" />
+        <Input label="Monthly rent (₹)" required hint="For a PG, enter the lowest per-bed rent" type="number" min="0" inputMode="numeric" value={values.price} onChange={set('price')} error={errors.price} placeholder="e.g. 6500" />
+        <Input label="Room / property size (sq. ft.)" type="number" min="0" inputMode="numeric" value={values.areaSqft} onChange={set('areaSqft')} error={errors.areaSqft} placeholder="e.g. 120" />
       </div>
-      <Textarea label="Description" required value={values.description} onChange={set('description')} error={errors.description} rows={5} placeholder="Describe the property, its condition, nearby landmarks and anything a buyer should know." />
+      <Textarea label="Description" required value={values.description} onChange={set('description')} error={errors.description} rows={5} placeholder="Describe the rooms, sharing options, meals, rules, nearby landmarks and anything a tenant should know." />
 
       <Field label="Property images" hint={`Up to ${MAX_IMAGES} images. JPG or PNG, up to 8 MB each.`}>
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">

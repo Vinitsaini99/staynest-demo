@@ -11,7 +11,7 @@ export const SORTS = [
 
 export const DEFAULT_FILTERS = {
   q: '', segment: '', category: '', locality: '', bhk: '', budget: 'any', minPrice: '', maxPrice: '',
-  area: '', furnishing: '', status: '', verified: '', sort: 'latest', view: 'grid', page: 1,
+  area: '', furnishing: '', status: '', sharing: '', food: '', gender: '', verified: '', sort: 'latest', view: 'grid', page: 1,
 }
 
 export function parseFilters(sp) {
@@ -34,7 +34,7 @@ export function toParams(f) {
   return p
 }
 
-export const FILTER_KEYS = ['q', 'category', 'locality', 'bhk', 'budget', 'minPrice', 'maxPrice', 'area', 'furnishing', 'status', 'verified']
+export const FILTER_KEYS = ['q', 'category', 'locality', 'bhk', 'budget', 'minPrice', 'maxPrice', 'area', 'furnishing', 'status', 'sharing', 'food', 'gender', 'verified']
 
 export function activeFilterCount(f) {
   return FILTER_KEYS.filter((k) => f[k] !== '' && f[k] !== DEFAULT_FILTERS[k]).length
@@ -68,14 +68,18 @@ export function applyFilters(list, f, scope = {}) {
       const n = Number(f.bhk)
       if (n >= 4 ? p.bhk < 4 : p.bhk !== n) return false
     }
-    if (min != null && p.price < min) return false
-    if (max != null && p.price > max) return false
+    const price = f.sharing && p.sharingPrices ? p.sharingPrices[f.sharing] : p.price
+    if (min != null && price < min) return false
+    if (max != null && price > max) return false
     if (area) {
       if (p.areaSqft < area.min) return false
       if (area.max != null && p.areaSqft > area.max) return false
     }
     if (f.furnishing && p.furnishing !== f.furnishing) return false
     if (f.status && p.status !== f.status) return false
+    if (f.sharing && !(p.sharing || []).includes(f.sharing)) return false
+    if (f.food && !p.food) return false
+    if (f.gender && p.gender !== f.gender) return false
     if (f.verified && !p.verified) return false
     if (q) {
       const hay = `${p.title} ${p.address} ${p.propertyType} ${localityName(p.locality)} ${p.description}`.toLowerCase()

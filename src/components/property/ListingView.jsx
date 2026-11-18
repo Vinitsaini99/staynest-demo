@@ -24,9 +24,11 @@ function chipLabel(key, f) {
     case 'locality': return localityName(f.locality)
     case 'bhk': return f.bhk === '4' ? '4+ BHK' : `${f.bhk} BHK`
     case 'budget': return BUDGETS.find((b) => b.id === f.budget)?.label
-    case 'minPrice': return `Min ₹${Number(f.minPrice) / 100000} L`
-    case 'maxPrice': return `Max ₹${Number(f.maxPrice) / 100000} L`
+    case 'minPrice': return `Min ₹${Number(f.minPrice).toLocaleString('en-IN')}`
+    case 'maxPrice': return `Max ₹${Number(f.maxPrice).toLocaleString('en-IN')}`
     case 'area': return AREA_RANGES.find((a) => a.id === f.area)?.label
+    case 'sharing': return `${f.sharing} sharing`
+    case 'food': return 'Meals included'
     case 'verified': return 'Verified'
     default: return f[key]
   }

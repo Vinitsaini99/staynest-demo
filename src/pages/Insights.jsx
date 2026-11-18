@@ -10,10 +10,10 @@ import { LinkButton } from '../components/ui/Button'
 import NotFound from './NotFound'
 
 export function InsightsIndex() {
-  useSeo({ title: 'Real Estate Insights – Guides for Buyers & Sellers in Kota', description: 'Practical guides on buying, selling and investing in property in Kota, Rajasthan.', path: '/insights' })
+  useSeo({ title: 'Guides for PG & Rental Seekers in Kota', description: 'Practical guides on choosing a PG, renting a flat and listing your property in Kota, Rajasthan.', path: '/insights' })
   return (
     <>
-      <PageHero eyebrow="Insights" title="Real estate guides for Kota" intro="Practical, plain-language guidance for buyers, sellers and investors." crumbs={[{ label: 'Home', to: '/' }, { label: 'Insights' }]} />
+      <PageHero eyebrow="Insights" title="PG & rental guides for Kota" intro="Practical, plain-language guidance for tenants and owners." crumbs={[{ label: 'Home', to: '/' }, { label: 'Insights' }]} />
       <section className="container-x grid gap-10 py-16 md:grid-cols-2">
         {articles.map((a, i) => (
           <Reveal key={a.slug} delay={(i % 2) * 0.08}>
@@ -64,7 +64,7 @@ export function Article() {
           <div className="sticky top-32 border border-line bg-white p-6">
             <h3 className="text-xl text-forest">Looking for a property?</h3>
             <p className="mt-2 text-sm text-muted">Browse listings across Kota’s top localities.</p>
-            <LinkButton to="/buy-property" className="mt-5 w-full">Browse Properties</LinkButton>
+            <LinkButton to="/properties" className="mt-5 w-full">Browse Listings</LinkButton>
           </div>
         </aside>
       </div>

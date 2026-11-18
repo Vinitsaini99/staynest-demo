@@ -7,11 +7,10 @@ import Logo from './Logo'
 import SocialIcon from './SocialIcons'
 
 const quick = [
-  { label: 'Buy Property', to: '/buy-property' },
-  { label: 'Sell Your Property', to: '/sell-your-property' },
-  { label: 'Residential', to: '/residential' },
-  { label: 'Commercial', to: '/commercial' },
-  { label: 'Plots & Land', to: '/plots-and-land' },
+  { label: 'All Listings', to: '/properties' },
+  { label: 'List Your Property', to: '/sell-your-property' },
+  { label: 'PG & Hostels', to: '/pg-hostels' },
+  { label: 'Rent', to: '/rent' },
   { label: 'Locations', to: '/locations' },
   { label: 'Insights', to: '/insights' },
   { label: 'About Us', to: '/about-us' },
@@ -29,7 +28,7 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <Logo light />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-ivory/70">
-              {SITE.tagline} Discover, compare and enquire about residential and commercial property across the city's best localities.
+              {SITE.tagline} Find affordable PGs, hostels, rooms and rental homes across Kota's best localities.
             </p>
             <div className="mt-6 flex gap-2">
               {Object.entries(SITE.social).map(([name, href]) => (
@@ -75,7 +74,7 @@ export default function Footer() {
           </div>
         </div>
         <p className="border-t border-ivory/10 pb-8 pt-5 text-[0.7rem] leading-relaxed text-ivory/40">
-          Listings shown are sample demonstration data. Property details, prices and availability must be independently verified with the seller before any transaction.
+          Listings shown are sample demonstration data. Property details, prices and availability must be independently verified with the owner before paying any rent or deposit.
         </p>
       </div>
     </footer>

@@ -22,25 +22,27 @@ export const SITE = {
 
 export const NAV = [
   { label: 'Home', to: '/' },
-  { label: 'Buy Property', to: '/buy-property' },
   {
-    label: 'Residential',
-    to: '/residential',
+    label: 'PG & Hostels',
+    to: '/pg-hostels',
     children: [
-      { label: 'Flats & Apartments', to: '/flats-apartments' },
-      { label: 'Houses & Villas', to: '/houses-villas' },
-      { label: 'Residential Plots', to: '/residential-plots' },
+      { label: 'Boys PG', to: '/boys-pg' },
+      { label: 'Girls PG', to: '/girls-pg' },
+      { label: 'Hostels & Co-living', to: '/hostels' },
     ],
   },
   {
-    label: 'Commercial',
-    to: '/commercial',
+    label: 'Rent',
+    to: '/rent',
     children: [
-      { label: 'Shops & Offices', to: '/commercial-shops-offices' },
-      { label: 'Commercial Land', to: '/plots-and-land?category=commercial-land' },
+      { label: 'Rooms', to: '/rooms-for-rent' },
+      { label: 'Flats', to: '/flats-for-rent' },
+      { label: 'Houses', to: '/houses-for-rent' },
+      { label: 'Shops & Offices', to: '/shops-offices-for-rent' },
     ],
   },
-  { label: 'Plots & Land', to: '/plots-and-land' },
+  { label: 'All Listings', to: '/properties' },
+  { label: 'Locations', to: '/locations' },
   { label: 'About Us', to: '/about-us' },
   { label: 'Contact Us', to: '/contact-us' },
 ]

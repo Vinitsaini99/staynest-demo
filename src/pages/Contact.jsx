@@ -17,7 +17,7 @@ export default function Contact() {
   const [errors, setErrors] = useState({})
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
-  useSeo({ title: 'Contact Us', description: `Get in touch with ${SITE.name} for help buying, selling or renting property in Kota, Rajasthan.`, path: '/contact-us' })
+  useSeo({ title: 'Contact Us', description: `Get in touch with ${SITE.name} for finding or listing a PG, room or rental in Kota, Rajasthan.`, path: '/contact-us' })
 
   const set = (k) => (e) => { setV((x) => ({ ...x, [k]: e.target.value })); if (errors[k]) setErrors((x) => ({ ...x, [k]: '' })) }
 
@@ -49,7 +49,7 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero eyebrow="Contact us" title="Let’s talk property" intro="Questions about a listing, selling your property, or finding the right locality? We’re here to help." crumbs={[{ label: 'Home', to: '/' }, { label: 'Contact Us' }]} />
+      <PageHero eyebrow="Contact us" title="Let’s talk" intro="Questions about a listing, listing your PG or rental, or finding the right locality? We’re here to help." crumbs={[{ label: 'Home', to: '/' }, { label: 'Contact Us' }]} />
       <section className="container-x grid gap-12 py-14 lg:grid-cols-[1.2fr_0.8fr] md:py-20">
         {done ? (
           <div className="border border-line bg-white p-10 text-center">
@@ -67,7 +67,7 @@ export default function Contact() {
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
               <Input label="Email" required type="email" value={v.email} onChange={set('email')} error={errors.email} autoComplete="email" />
-              <Select label="I’m interested in" required value={v.topic} onChange={set('topic')} error={errors.topic} placeholder="Select a topic" options={['Buying a property', 'Selling a property', 'Commercial property', 'Plots & land', 'Something else']} />
+              <Select label="I’m interested in" required value={v.topic} onChange={set('topic')} error={errors.topic} placeholder="Select a topic" options={['Finding a PG', 'Finding a room or flat for rent', 'Listing my PG or rental', 'Commercial space for rent', 'Something else']} />
             </div>
             <Textarea label="Message" required rows={5} value={v.message} onChange={set('message')} error={errors.message} />
             <Button type="submit" size="lg" loading={busy}>Send Message</Button>

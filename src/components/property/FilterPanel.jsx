@@ -1,4 +1,4 @@
-import { AREA_RANGES, BHK_CATEGORIES, BUDGETS, FURNISHING, PRICE_STEPS, STATUSES, categories } from '../../data/categories'
+import { AREA_RANGES, BHK_CATEGORIES, BUDGETS, FURNISHING, PG_CATEGORIES, PRICE_STEPS, SHARING, STATUSES, categories } from '../../data/categories'
 import { locations } from '../../data/locations'
 import { Select } from '../ui/Field'
 
@@ -17,7 +17,7 @@ export default function FilterPanel({ filters: f, onChange, scope = {} }) {
   const availableCats = categories.filter((c) => (scope.segment ? c.segment === scope.segment : true) && (scope.categories ? scope.categories.includes(c.slug) : true))
   const selectedCats = f.category ? f.category.split(',') : []
   const showBhk = availableCats.some((c) => BHK_CATEGORIES.includes(c.slug))
-  const showFurnishing = availableCats.some((c) => !['plots', 'commercial-land'].includes(c.slug))
+  const showPg = availableCats.some((c) => PG_CATEGORIES.includes(c.slug))
 
   const toggleCat = (slug) => {
     const next = selectedCats.includes(slug) ? selectedCats.filter((x) => x !== slug) : [...selectedCats, slug]
@@ -39,7 +39,7 @@ export default function FilterPanel({ filters: f, onChange, scope = {} }) {
         </Group>
       )}
 
-      <Group title="Budget">
+      <Group title="Monthly rent">
         <Select aria-label="Budget" value={f.budget} onChange={(e) => onChange({ budget: e.target.value, minPrice: '', maxPrice: '' })} options={BUDGETS.map((b) => ({ value: b.id, label: b.label }))} />
         <div className="mt-3 grid grid-cols-2 gap-3">
           <Select aria-label="Minimum price" value={f.minPrice} onChange={(e) => onChange({ minPrice: e.target.value })} placeholder="Min price" options={PRICE_STEPS.map((s) => ({ value: s.value, label: s.label }))} />
@@ -59,13 +59,23 @@ export default function FilterPanel({ filters: f, onChange, scope = {} }) {
         <Select aria-label="Area" value={f.area} onChange={(e) => onChange({ area: e.target.value })} placeholder="Any area" options={AREA_RANGES.map((a) => ({ value: a.id, label: a.label }))} />
       </Group>
 
-      {showFurnishing && (
-        <Group title="Furnishing">
+      {showPg && (
+        <Group title="PG options">
           <div className="flex flex-wrap gap-2">
-            {FURNISHING.map((x) => <Chip key={x} active={f.furnishing === x} onClick={() => toggle('furnishing', x)}>{x}</Chip>)}
+            {SHARING.map((x) => <Chip key={x} active={f.sharing === x} onClick={() => toggle('sharing', x)}>{x} sharing</Chip>)}
           </div>
+          <label className="mt-4 flex cursor-pointer items-center gap-3 text-sm">
+            <input type="checkbox" className="h-4 w-4 accent-[#142D27]" checked={!!f.food} onChange={(e) => onChange({ food: e.target.checked ? '1' : '' })} />
+            Meals included
+          </label>
         </Group>
       )}
+
+      <Group title="Furnishing">
+        <div className="flex flex-wrap gap-2">
+          {FURNISHING.map((x) => <Chip key={x} active={f.furnishing === x} onClick={() => toggle('furnishing', x)}>{x}</Chip>)}
+        </div>
+      </Group>
 
       <Group title="Status">
         <div className="flex flex-wrap gap-2">

@@ -106,7 +106,7 @@ function MobileDrawer({ open, onClose }) {
         ))}
       </nav>
       <div className="mt-6 space-y-3">
-        <LinkButton to="/sell-your-property" variant="gold" className="w-full" onClick={onClose}>Sell Your Property</LinkButton>
+        <LinkButton to="/sell-your-property" variant="gold" className="w-full" onClick={onClose}>List Your Property</LinkButton>
         {user ? (
           <>
             <LinkButton to="/dashboard" variant="outline" className="w-full" onClick={onClose}>My Dashboard</LinkButton>
@@ -152,7 +152,7 @@ export default function Header() {
             ) : (
               <Link to="/login" className="hidden items-center gap-1.5 px-2 py-2 text-[0.84rem] font-semibold text-forest hover:text-gold-deep lg:flex"><User size={15} /> Login / Register</Link>
             )}
-            <div className="hidden md:block"><LinkButton to="/sell-your-property" variant="primary" size="sm">Sell Your Property</LinkButton></div>
+            <div className="hidden md:block"><LinkButton to="/sell-your-property" variant="primary" size="sm">List Your Property</LinkButton></div>
             <button className="grid h-10 w-10 place-items-center text-forest lg:hidden" onClick={() => setDrawer(true)} aria-label="Open menu"><Menu size={20} /></button>
           </div>
         </div>

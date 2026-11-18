@@ -23,10 +23,10 @@ export function LocationPage() {
   if (!loc) return <NotFound />
   const preset = {
     path: `/locations/${loc.slug}`,
-    title: `Property for Sale in ${loc.name}, Kota`,
-    h1: `Property in ${loc.name}, Kota`,
+    title: `PG & Rooms for Rent in ${loc.name}, Kota`,
+    h1: `PG & Rentals in ${loc.name}, Kota`,
     eyebrow: 'Location guide',
-    description: `${loc.blurb} Browse flats, houses, plots and commercial property for sale in ${loc.name}, Kota, Rajasthan.`,
+    description: `${loc.blurb} Browse PGs, hostels, rooms, flats and houses for rent in ${loc.name}, Kota, Rajasthan.`,
     scope: {},
   }
   return (
@@ -60,10 +60,10 @@ export function LocationPage() {
 
 export function LocationsIndex() {
   const { byLocality } = getCounts()
-  useSeo({ title: 'Localities in Kota – Property by Area', description: 'Explore property for sale across Kota localities including Talwandi, Kunhari, Vigyan Nagar, Landmark City and more.', path: '/locations' })
+  useSeo({ title: 'Localities in Kota – PG & Rentals by Area', description: 'Explore PGs and rentals across Kota localities including Talwandi, Kunhari, Vigyan Nagar, Landmark City and more.', path: '/locations' })
   return (
     <>
-      <PageHero eyebrow="Locations" title="Property in Kota, by locality" intro="Pick a neighbourhood to see its character and available properties." crumbs={[{ label: 'Home', to: '/' }, { label: 'Locations' }]} />
+      <PageHero eyebrow="Locations" title="PG & rentals in Kota, by locality" intro="Pick a neighbourhood to see its character and available properties." crumbs={[{ label: 'Home', to: '/' }, { label: 'Locations' }]} />
       <section className="container-x py-16">
         <SectionHead eyebrow="12 localities" title="Where would you like to live or invest?" />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
