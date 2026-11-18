@@ -1,10 +1,12 @@
 {
-  "name": "staynest-demo",
+  "name": "kota-ki-property",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
@@ -15,8 +17,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hot-toast": "^2.6.1",
-    "react-router-dom": "^7.18.5",
-    "recharts": "^3.10.1"
+    "react-router-dom": "^7.18.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.5",

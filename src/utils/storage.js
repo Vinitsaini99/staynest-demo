@@ -1,18 +1,25 @@
-const KEY = 'staynest-demo-v1'
-
-export function loadState() {
-  try {
-    const raw = localStorage.getItem(KEY)
-    return raw ? JSON.parse(raw) : null
-  } catch {
-    return null
-  }
-}
-
-export function saveState(state) {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(state))
-  } catch {
-    /* ignore quota */
-  }
+export const store = {
+  get(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem(key)
+      return raw ? JSON.parse(raw) : fallback
+    } catch {
+      return fallback
+    }
+  },
+  set(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value))
+      return true
+    } catch {
+      return false // quota exceeded or storage disabled
+    }
+  },
+  remove(key) {
+    try {
+      localStorage.removeItem(key)
+    } catch {
+      /* ignore */
+    }
+  },
 }

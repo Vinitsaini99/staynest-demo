@@ -1,201 +1,66 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import {
-  bookings as seedBookings,
-  currentOwnerId,
-  currentStudentId,
-  properties as seedProperties,
-  reviews as seedReviews,
-  roomInventory as seedRooms,
-  tours as seedTours,
-} from '../data/mockData'
-import { loadState, saveState } from '../utils/storage'
+import * as api from '../services/api'
+import { store } from '../utils/storage'
 
-const AppContext = createContext(null)
+const Ctx = createContext(null)
+export const useApp = () => useContext(Ctx)
 
-const defaultState = {
-  role: 'student',
-  properties: seedProperties,
-  bookings: seedBookings,
-  reviews: seedReviews,
-  tours: seedTours,
-  roomInventory: seedRooms,
-  favourites: ['p2', 'p4'],
-  compare: [],
-  notifications: null,
-}
+const wishKey = (uid) => `kkp_wishlist_${uid || 'guest'}`
 
 export function AppProvider({ children }) {
-  const [ready, setReady] = useState(false)
-  const [role, setRole] = useState('student')
-  const [properties, setProperties] = useState(seedProperties)
-  const [bookings, setBookings] = useState(seedBookings)
-  const [reviews, setReviews] = useState(seedReviews)
-  const [tours, setTours] = useState(seedTours)
-  const [roomInventory, setRoomInventory] = useState(seedRooms)
-  const [favourites, setFavourites] = useState(['p2', 'p4'])
-  const [compare, setCompare] = useState([])
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [user, setUser] = useState(() => api.getSessionUser())
+  const [wishlist, setWishlist] = useState(() => store.get(wishKey(api.getSessionUser()?.id), []))
 
   useEffect(() => {
-    const saved = loadState()
-    if (saved) {
-      setRole(saved.role ?? 'student')
-      setProperties(saved.properties ?? seedProperties)
-      setBookings(saved.bookings ?? seedBookings)
-      setReviews(saved.reviews ?? seedReviews)
-      setTours(saved.tours ?? seedTours)
-      setRoomInventory(saved.roomInventory ?? seedRooms)
-      setFavourites(saved.favourites ?? ['p2', 'p4'])
-      setCompare(saved.compare ?? [])
-    }
-    setReady(true)
+    store.set(wishKey(user?.id), wishlist)
+  }, [wishlist, user])
+
+  const toggleWishlist = useCallback((id) => {
+    const has = wishlist.includes(id)
+    setWishlist(has ? wishlist.filter((x) => x !== id) : [id, ...wishlist])
+    toast.success(has ? 'Removed from saved properties' : 'Saved to your wishlist')
+  }, [wishlist])
+
+  const afterAuth = useCallback((u) => {
+    // merge guest wishlist into the user's list
+    const guest = store.get(wishKey(null), [])
+    const mine = store.get(wishKey(u.id), [])
+    const merged = [...new Set([...guest, ...mine])]
+    store.remove(wishKey(null))
+    store.set(wishKey(u.id), merged)
+    setWishlist(merged)
+    setUser(u)
   }, [])
 
-  useEffect(() => {
-    if (!ready) return
-    saveState({ role, properties, bookings, reviews, tours, roomInventory, favourites, compare })
-  }, [ready, role, properties, bookings, reviews, tours, roomInventory, favourites, compare])
+  const login = useCallback(async (data) => {
+    const u = await api.loginUser(data)
+    afterAuth(u)
+    return u
+  }, [afterAuth])
 
-  const switchRole = useCallback((next) => {
-    setRole(next)
-    toast.success(`Switched to ${next === 'admin' ? 'Admin' : next === 'owner' ? 'Property Owner' : 'Student'} portal`)
+  const register = useCallback(async (data) => {
+    const u = await api.registerUser(data)
+    afterAuth(u)
+    return u
+  }, [afterAuth])
+
+  const logout = useCallback(() => {
+    api.logoutUser()
+    setUser(null)
+    setWishlist(store.get(wishKey(null), []))
+    toast.success('You have been logged out')
   }, [])
 
-  const toggleFavourite = useCallback((id) => {
-    setFavourites((prev) => {
-      const exists = prev.includes(id)
-      toast.success(exists ? 'Removed from wishlist' : 'Added to wishlist')
-      return exists ? prev.filter((x) => x !== id) : [...prev, id]
-    })
-  }, [])
-
-  const toggleCompare = useCallback((id) => {
-    setCompare((prev) => {
-      if (prev.includes(id)) return prev.filter((x) => x !== id)
-      if (prev.length >= 3) {
-        toast.error('Compare up to 3 properties')
-        return prev
-      }
-      toast.success('Added to comparison')
-      return [...prev, id]
-    })
-  }, [])
-
-  const updatePropertyStatus = useCallback((id, status) => {
-    setProperties((prev) => prev.map((p) => (p.id === id ? { ...p, status, verified: status === 'Approved' } : p)))
-    toast.success(`Property ${status.toLowerCase()}`)
-  }, [])
-
-  const addProperty = useCallback((property) => {
-    setProperties((prev) => [{ ...property, id: `p${Date.now()}`, status: 'Pending', verified: false, rating: 0, reviewsCount: 0, occupancy: 0 }, ...prev])
-    toast.success('Property submitted for approval')
-  }, [])
-
-  const deleteProperty = useCallback((id) => {
-    setProperties((prev) => prev.filter((p) => p.id !== id))
-    toast.success('Property deleted')
-  }, [])
-
-  const addBooking = useCallback((booking) => {
-    const full = { ...booking, id: `b${Date.now()}`, status: 'Confirmed', paid: true }
-    setBookings((prev) => [full, ...prev])
-    toast.success('Booking confirmed!')
-    return full
-  }, [])
-
-  const updateBookingStatus = useCallback((id, status) => {
-    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)))
-    toast.success(`Booking ${status.toLowerCase()}`)
-  }, [])
-
-  const addReview = useCallback((review) => {
-    setReviews((prev) => [{ ...review, id: `r${Date.now()}`, date: new Date().toISOString().slice(0, 10) }, ...prev])
-    toast.success('Review submitted')
-  }, [])
-
-  const scheduleTour = useCallback((tour) => {
-    setTours((prev) => [{ ...tour, id: `t${Date.now()}`, status: 'Scheduled' }, ...prev])
-    toast.success('Tour scheduled successfully')
-  }, [])
-
-  const updateBedStatus = useCallback((propertyId, roomNo, bedId, status) => {
-    setRoomInventory((prev) =>
-      prev.map((block) => {
-        if (block.propertyId !== propertyId) return block
-        return {
-          ...block,
-          rooms: block.rooms.map((room) => {
-            if (room.no !== roomNo) return room
-            return {
-              ...room,
-              beds: room.beds.map((bed) => (bed.id === bedId ? { ...bed, status } : bed)),
-            }
-          }),
-        }
-      }),
-    )
-    toast.success(`Bed marked as ${status}`)
-  }, [])
+  const updateUser = useCallback(async (patch) => {
+    const u = await api.updateProfile(user.id, patch)
+    setUser(u)
+    return u
+  }, [user])
 
   const value = useMemo(
-    () => ({
-      ready,
-      role,
-      switchRole,
-      properties,
-      bookings,
-      reviews,
-      tours,
-      roomInventory,
-      favourites,
-      compare,
-      sidebarOpen,
-      setSidebarOpen,
-      toggleFavourite,
-      toggleCompare,
-      setCompare,
-      updatePropertyStatus,
-      addProperty,
-      deleteProperty,
-      addBooking,
-      updateBookingStatus,
-      addReview,
-      scheduleTour,
-      updateBedStatus,
-      currentStudentId,
-      currentOwnerId,
-    }),
-    [
-      ready,
-      role,
-      switchRole,
-      properties,
-      bookings,
-      reviews,
-      tours,
-      roomInventory,
-      favourites,
-      compare,
-      sidebarOpen,
-      toggleFavourite,
-      toggleCompare,
-      updatePropertyStatus,
-      addProperty,
-      deleteProperty,
-      addBooking,
-      updateBookingStatus,
-      addReview,
-      scheduleTour,
-      updateBedStatus,
-    ],
+    () => ({ user, login, register, logout, updateUser, wishlist, toggleWishlist, isSaved: (id) => wishlist.includes(id) }),
+    [user, login, register, logout, updateUser, wishlist, toggleWishlist],
   )
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
-}
-
-export function useApp() {
-  const ctx = useContext(AppContext)
-  if (!ctx) throw new Error('useApp must be used within AppProvider')
-  return ctx
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }
