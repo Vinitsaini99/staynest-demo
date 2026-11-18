@@ -23,7 +23,7 @@ const linkCls = 'block py-1 text-sm text-ivory/70 transition-colors hover:text-g
 
 export default function Footer() {
   return (
-    <footer className="blueprint bg-forest pb-20 text-ivory lg:pb-0">
+    <footer className="bg-forest pb-20 text-ivory lg:pb-0">
       <div className="container-x pt-16">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">

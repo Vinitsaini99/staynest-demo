@@ -5,9 +5,9 @@ export const Skeleton = ({ className = '' }) => <div className={`animate-pulse b
 
 export function CardSkeleton({ list = false }) {
   return (
-    <div className={`border border-line bg-white ${list ? 'flex' : ''}`}>
+    <div className={list ? 'flex gap-6' : ''}>
       <Skeleton className={list ? 'h-48 w-64 shrink-0' : 'aspect-[4/3] w-full'} />
-      <div className="flex-1 space-y-3 p-5">
+      <div className={`flex-1 space-y-3 ${list ? '' : 'pt-4'}`}>
         <Skeleton className="h-5 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
         <Skeleton className="h-4 w-full" />

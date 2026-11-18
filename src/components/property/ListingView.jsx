@@ -91,7 +91,7 @@ export default function ListingView({ preset, locked = {}, path, crumbs, extra }
       <section className="container-x py-10 md:py-14" ref={topRef}>
         <div className="grid gap-10 lg:grid-cols-[290px_1fr]">
           <aside className="hidden lg:block">
-            <div className="sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto border border-line bg-white p-6">
+            <div className="sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto pr-4">
               <div className="mb-5 flex items-center justify-between">
                 <h2 className="font-sans text-base font-semibold tracking-normal text-forest">Filters</h2>
                 {count > 0 && <button onClick={clearAll} className="text-xs font-semibold text-gold-deep hover:underline">Clear all</button>}

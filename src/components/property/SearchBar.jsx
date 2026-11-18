@@ -10,8 +10,8 @@ const selectCls = "field appearance-none border-0 bg-transparent px-0 py-1 text-
 
 function Cell({ label, children, stacked }) {
   return (
-    <label className={stacked ? 'block border border-line bg-white px-4 py-2.5' : 'block px-5 py-3.5'}>
-      <span className="block text-[0.64rem] font-bold uppercase tracking-[0.18em] text-gold-deep">{label}</span>
+    <label className={stacked ? 'block border border-line bg-white px-3 py-2.5' : 'block px-5 py-3.5'}>
+      <span className="block text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-muted">{label}</span>
       {children}
     </label>
   )
@@ -41,7 +41,7 @@ export default function SearchBar({ variant = 'hero', onDone }) {
     <form
       onSubmit={submit}
       aria-label="Search properties"
-      className={stacked ? 'space-y-3' : 'grid grid-cols-2 bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.55)] lg:grid-cols-[1fr_1fr_1.15fr_1.1fr_1.1fr_auto] [&>label]:border-b [&>label]:border-line lg:[&>label]:border-b-0 lg:[&>label]:border-r'}
+      className={stacked ? 'grid grid-cols-2 gap-3' : 'grid grid-cols-2 bg-white border border-line shadow-[0_24px_50px_-24px_rgba(20,45,39,0.35)] lg:grid-cols-[1fr_1fr_1.15fr_1.1fr_1.1fr_auto] [&>label]:border-b [&>label]:border-line lg:[&>label]:border-b-0 lg:[&>label]:border-r'}
     >
       <Cell label="I want to" stacked={stacked}>
         <select className={selectCls} value={intent} onChange={(e) => setIntent(e.target.value)}>
@@ -73,7 +73,7 @@ export default function SearchBar({ variant = 'hero', onDone }) {
           {BUDGETS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
         </select>
       </Cell>
-      <div className={stacked ? '' : 'col-span-2 p-2.5 lg:col-span-1'}>
+      <div className={stacked ? 'col-span-2' : 'col-span-2 p-2.5 lg:col-span-1'}>
         <Button type="submit" variant="primary" size="lg" className="h-full w-full lg:px-9">
           <Search size={17} /> {intent === 'sell' ? 'List Property' : 'Search'}
         </Button>

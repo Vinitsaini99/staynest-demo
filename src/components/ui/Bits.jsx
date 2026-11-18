@@ -30,15 +30,14 @@ export function Breadcrumbs({ items, light = false }) {
 
 export function PageHero({ eyebrow, title, intro, crumbs, children }) {
   return (
-    <section className="blueprint relative overflow-hidden bg-forest text-ivory">
-      <div className="container-x py-14 md:py-20">
-        {crumbs && <Breadcrumbs items={crumbs} light />}
-        {eyebrow && <p className="eyebrow eyebrow-light mt-6">{eyebrow}</p>}
-        <h1 className="mt-3 max-w-3xl text-4xl leading-[1.1] md:text-5xl">{title}</h1>
-        {intro && <p className="mt-5 max-w-2xl text-[0.98rem] leading-relaxed text-ivory/70">{intro}</p>}
+    <section className="border-b border-line">
+      <div className="container-x py-12 md:py-16">
+        {crumbs && <Breadcrumbs items={crumbs} />}
+        {eyebrow && <p className="eyebrow mt-8">{eyebrow}</p>}
+        <h1 className={`${eyebrow ? 'mt-3' : 'mt-8'} max-w-3xl text-4xl leading-[1.1] text-forest md:text-[3.2rem]`}>{title}</h1>
+        {intro && <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted">{intro}</p>}
         {children}
       </div>
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gold/40" />
     </section>
   )
 }

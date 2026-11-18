@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { ArrowRight, BadgeCheck, Compass, FileCheck2, Handshake, Headset, Home, MapPinned, MessageSquareQuote, Search, ShieldCheck, Wallet } from 'lucide-react'
+import { ArrowRight, Compass, FileCheck2, Handshake, Headset, Home, MapPinned, MessageSquareQuote, Search, ShieldCheck, Wallet } from 'lucide-react'
 import { getArticles, addReview, getReviews } from '../../services/api'
 import { imgSrc } from '../../utils/image'
 import { formatDate } from '../../utils/format'
@@ -25,15 +25,13 @@ const reasons = [
 export function WhyChoose() {
   return (
     <section className="container-x py-20 md:py-28">
-      <SectionHead align="center" eyebrow="Why Kota Ki Property" title="A calmer, clearer way to buy and sell property" />
-      <div className="grid gap-px border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+      <SectionHead eyebrow="Why Kota Ki Property" title="A calmer, clearer way to buy and sell property" />
+      <div className="grid gap-x-12 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
         {reasons.map(({ icon: Icon, title, text }, i) => (
-          <Reveal key={title} delay={(i % 3) * 0.07} className="bg-ivory">
-            <div className="h-full p-8 transition-colors hover:bg-white">
-              <Icon size={28} strokeWidth={1.4} className="text-gold-deep" />
-              <h3 className="mt-5 text-xl text-forest">{title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">{text}</p>
-            </div>
+          <Reveal key={title} delay={(i % 3) * 0.06}>
+            <Icon size={24} strokeWidth={1.4} className="text-gold-deep" />
+            <h3 className="mt-4 font-sans text-[1.05rem] font-semibold tracking-normal text-forest">{title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
           </Reveal>
         ))}
       </div>
@@ -43,31 +41,18 @@ export function WhyChoose() {
 
 export function Showcase() {
   return (
-    <section className="bg-forest text-ivory">
-      <div className="container-x grid items-center gap-12 py-20 md:py-28 lg:grid-cols-2">
+    <section className="container-x pb-20 md:pb-28">
+      <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <Reveal>
-          <p className="eyebrow eyebrow-light">The premium collection</p>
-          <h2 className="mt-4 text-4xl leading-tight md:text-5xl">Residences designed for how you actually live</h2>
-          <p className="mt-6 max-w-lg leading-relaxed text-ivory/70">
-            From landscaped villas in planned townships to light-filled apartments close to everything, explore homes selected for space, layout and neighbourhood quality.
-          </p>
-          <ul className="mt-8 space-y-3 text-sm text-ivory/85">
-            {['Villas & independent houses with private outdoor space', 'High-floor apartments with open views', 'Plots in planned township layouts'].map((t) => (
-              <li key={t} className="flex gap-3"><BadgeCheck size={18} className="shrink-0 text-gold" />{t}</li>
-            ))}
-          </ul>
-          <LinkButton to="/houses-villas" variant="gold" size="lg" className="mt-9">Explore Villas &amp; Houses</LinkButton>
+          <div className="img-zoom aspect-[4/3] bg-stone"><img src={imgSrc('1600596542815-ffad4c1539a9', 1200, 900)} alt="Modern villa exterior" loading="lazy" className="h-full w-full object-cover" /></div>
         </Reveal>
-        <Reveal delay={0.1} className="relative">
-          <div className="grid grid-cols-5 grid-rows-2 gap-3">
-            <div className="img-zoom col-span-3 row-span-2"><img src={imgSrc('1600596542815-ffad4c1539a9', 800, 1000)} alt="Modern villa exterior" loading="lazy" className="h-full w-full object-cover" /></div>
-            <div className="img-zoom col-span-2"><img src={imgSrc('1600585154340-be6161a56a0c', 500, 400)} alt="Contemporary living space" loading="lazy" className="h-full w-full object-cover" /></div>
-            <div className="img-zoom col-span-2"><img src={imgSrc('1600573472550-8090b5e0745e', 500, 400)} alt="Elegant interior detail" loading="lazy" className="h-full w-full object-cover" /></div>
-          </div>
-          <div className="absolute -bottom-5 -left-3 hidden border border-gold/50 bg-forest px-5 py-4 md:block">
-            <p className="font-display text-lg text-gold">Considered spaces</p>
-            <p className="text-xs text-ivory/60">Architecture &amp; neighbourhood first</p>
-          </div>
+        <Reveal delay={0.1}>
+          <p className="eyebrow">The premium collection</p>
+          <h2 className="mt-4 text-3xl leading-tight text-forest md:text-[2.6rem]">Residences designed for how you live</h2>
+          <p className="mt-5 leading-relaxed text-muted">
+            Landscaped villas, light-filled apartments and plots in planned townships — homes chosen for space, layout and neighbourhood.
+          </p>
+          <LinkButton to="/houses-villas" variant="primary" size="lg" className="mt-8">Explore Villas &amp; Houses</LinkButton>
         </Reveal>
       </div>
     </section>
@@ -76,7 +61,7 @@ export function Showcase() {
 
 export function SellSection() {
   return (
-    <section id="sell" className="bg-stone">
+    <section id="sell" className="bg-stone/60">
       <div className="container-x grid gap-12 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
         <Reveal>
           <p className="eyebrow">Sell your property</p>
@@ -105,15 +90,13 @@ const steps = [
 export function HowItWorks() {
   return (
     <section className="container-x py-20 md:py-28">
-      <SectionHead align="center" eyebrow="How it works" title="From first search to the front door" />
-      <div className="relative grid gap-10 md:grid-cols-3">
-        <div className="absolute left-[16%] right-[16%] top-8 hidden h-px bg-line md:block" />
-        {steps.map(({ icon: Icon, title, text }, i) => (
-          <Reveal key={title} delay={i * 0.1} className="relative text-center">
-            <div className="relative mx-auto grid h-16 w-16 place-items-center border border-forest bg-ivory text-forest"><Icon size={26} strokeWidth={1.4} /></div>
-            <p className="mt-5 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-gold-deep">Step {i + 1}</p>
-            <h3 className="mt-2 text-2xl text-forest">{title}</h3>
-            <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-muted">{text}</p>
+      <SectionHead eyebrow="How it works" title="From first search to the front door" />
+      <div className="grid gap-12 md:grid-cols-3">
+        {steps.map(({ title, text }, i) => (
+          <Reveal key={title} delay={i * 0.08}>
+            <p className="font-display text-5xl text-gold">{String(i + 1).padStart(2, '0')}</p>
+            <h3 className="mt-4 text-2xl text-forest">{title}</h3>
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">{text}</p>
           </Reveal>
         ))}
       </div>
@@ -218,7 +201,7 @@ export function InsightsRow() {
 
 export function CtaBand() {
   return (
-    <section className="blueprint relative overflow-hidden bg-forest">
+    <section className="relative overflow-hidden bg-forest">
       <div className="container-x flex flex-col items-start justify-between gap-6 py-14 md:flex-row md:items-center">
         <div>
           <p className="eyebrow eyebrow-light flex items-center gap-2"><Compass size={14} /> Need guidance?</p>

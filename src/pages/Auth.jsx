@@ -52,7 +52,7 @@ export default function Auth({ mode }) {
     <section className="grid min-h-[78vh] lg:grid-cols-2">
       <div className="relative hidden bg-forest lg:block">
         <img src={imgSrc('1600596542815-ffad4c1539a9', 1100, 1300)} alt="" className="absolute inset-0 h-full w-full object-cover opacity-50" />
-        <div className="blueprint absolute inset-0" />
+        <div className="absolute inset-0" />
         <div className="relative flex h-full flex-col justify-end p-14 text-ivory">
           <LogoMark size={48} />
           <h2 className="mt-6 max-w-sm text-4xl leading-tight">Your shortlist, saved and organised.</h2>

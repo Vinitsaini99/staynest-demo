@@ -140,17 +140,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40">
-      <div className="hidden bg-forest text-[0.74rem] text-ivory/75 lg:block">
-        <div className="container-x flex h-9 items-center justify-between">
-          <span>{SITE.tagline}</span>
-          <div className="flex items-center gap-6">
-            <span>{SITE.hours}</span>
-            <a href={`tel:+${SITE.phoneRaw}`} className="flex items-center gap-1.5 font-semibold text-gold hover:text-ivory"><Phone size={12} /> {SITE.phone}</a>
-          </div>
-        </div>
-      </div>
-      <div className={`border-b border-line bg-ivory/95 backdrop-blur transition-shadow ${scrolled ? 'shadow-[0_8px_24px_-16px_rgba(20,45,39,0.35)]' : ''}`}>
-        <div className="container-x flex h-[72px] items-center justify-between gap-4">
+      <div className={`bg-ivory/90 backdrop-blur-md transition-colors ${scrolled ? 'border-b border-line' : 'border-b border-transparent'}`}>
+        <div className="container-x flex h-[76px] items-center justify-between gap-4">
           <Logo />
           <nav className="hidden items-center gap-6 xl:gap-7 lg:flex" aria-label="Primary">
             {NAV.map((item) => <DesktopItem key={item.label} item={item} />)}
@@ -161,8 +152,8 @@ export default function Header() {
             ) : (
               <Link to="/login" className="hidden items-center gap-1.5 px-2 py-2 text-[0.84rem] font-semibold text-forest hover:text-gold-deep lg:flex"><User size={15} /> Login / Register</Link>
             )}
-            <div className="hidden md:block"><LinkButton to="/sell-your-property" variant="gold" size="sm">Sell Your Property</LinkButton></div>
-            <button className="grid h-10 w-10 place-items-center border border-line bg-white text-forest lg:hidden" onClick={() => setDrawer(true)} aria-label="Open menu"><Menu size={20} /></button>
+            <div className="hidden md:block"><LinkButton to="/sell-your-property" variant="primary" size="sm">Sell Your Property</LinkButton></div>
+            <button className="grid h-10 w-10 place-items-center text-forest lg:hidden" onClick={() => setDrawer(true)} aria-label="Open menu"><Menu size={20} /></button>
           </div>
         </div>
       </div>
