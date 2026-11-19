@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { BadgeCheck, BedDouble, Bath, CalendarDays, Check, Heart, Layers, MapPin, Maximize2, MessageCircle, Phone, Share2, Sofa, Users } from 'lucide-react'
-import PropertyArt from '../components/PropertyArt'
+import { BadgeCheck, BedDouble, Bath, CalendarDays, Check, ChevronLeft, ChevronRight, Heart, Layers, MapPin, Maximize2, MessageCircle, Phone, Share2, Sofa, Users } from 'lucide-react'
 import PropertyCard from '../components/PropertyCard'
 import Button from '../components/ui/Button'
 import { Input, Textarea } from '../components/ui/Field'
@@ -13,23 +12,33 @@ import { useAsync } from '../hooks/useAsync'
 import { useSeo } from '../hooks/useSeo'
 import { createEnquiry, getProperty, similarProperties } from '../services/api'
 import { categoryBySlug, furnishingLabel } from '../data/categories'
+import { hasOwnPhotos, listingPhotos } from '../data/photos'
 import { SITE, ownerWaLink } from '../config/site'
 import { formatArea, formatDate, formatPrice, formatRupees, pricePerSqft } from '../utils/format'
 import { cleanPhone, emailRule, minLen, phoneRule, required, validate } from '../utils/validation'
 
 function Gallery({ p }) {
   const [i, setI] = useState(0)
-  const imgs = p.images || []
+  const imgs = listingPhotos(p)
+  const stock = !hasOwnPhotos(p)
+  const go = (d) => setI((x) => (x + d + imgs.length) % imgs.length)
   return (
     <div>
-      <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-line bg-brand-tint">
-        {imgs.length ? <img src={imgs[i]} alt={`${p.title} photo ${i + 1}`} className="h-full w-full object-cover" /> : <PropertyArt category={p.category} seed={p.id} />}
-        {p.demo && <span className="absolute bottom-3 right-3 rounded-lg bg-ink/80 px-2.5 py-1 text-[0.7rem] font-bold text-white">Sample listing · illustration</span>}
+      <div className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-line bg-line/50">
+        <img src={imgs[i]} alt={`${p.title} photo ${i + 1}`} className="h-full w-full object-cover" />
+        {imgs.length > 1 && (
+          <>
+            <button type="button" onClick={() => go(-1)} aria-label="Previous photo" className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 shadow hover:bg-white"><ChevronLeft size={20} /></button>
+            <button type="button" onClick={() => go(1)} aria-label="Next photo" className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 shadow hover:bg-white"><ChevronRight size={20} /></button>
+            <span className="absolute bottom-3 left-3 rounded-md bg-ink/75 px-2 py-1 text-xs font-bold text-white">{i + 1} / {imgs.length}</span>
+          </>
+        )}
+        {stock && <span className="absolute bottom-3 right-3 rounded-md bg-ink/75 px-2.5 py-1 text-[0.7rem] font-semibold text-white">Representative photo</span>}
       </div>
       {imgs.length > 1 && (
         <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto">
           {imgs.map((src, k) => (
-            <button key={k} type="button" onClick={() => setI(k)} aria-label={`Show photo ${k + 1}`} className={`h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 ${k === i ? 'border-brand' : 'border-transparent opacity-70'}`}>
+            <button key={k} type="button" onClick={() => setI(k)} aria-label={`Show photo ${k + 1}`} className={`h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 ${k === i ? 'border-brand' : 'border-transparent opacity-70 hover:opacity-100'}`}>
               <img src={src} alt="" className="h-full w-full object-cover" />
             </button>
           ))}
@@ -38,7 +47,6 @@ function Gallery({ p }) {
     </div>
   )
 }
-
 function EnquiryForm({ p }) {
   const { user } = useApp()
   const [v, setV] = useState({ name: user?.name || '', phone: user?.phone || '', email: user?.email || '', message: `Hi, I am interested in "${p.title}". Is it still available?` })

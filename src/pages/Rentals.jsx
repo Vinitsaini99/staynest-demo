@@ -10,7 +10,7 @@ import { useAsync } from '../hooks/useAsync'
 import { useSeo } from '../hooks/useSeo'
 import { searchProperties } from '../services/api'
 import { EMPTY_FILTERS, SORTS, activeFilterCount, parseFilters, toParams } from '../utils/filters'
-import { categoryBySlug } from '../data/categories'
+import { categories, categoryBySlug, furnishingLabel } from '../data/categories'
 
 export default function Rentals() {
   const [sp, setSp] = useSearchParams()
@@ -38,6 +38,14 @@ export default function Rentals() {
   }
   const reset = () => update({ ...EMPTY_FILTERS, sort: filters.sort, q: filters.q })
   const count = activeFilterCount(filters)
+  const chips = [
+    filters.locality && { key: 'loc', label: filters.locality, clear: { locality: '' } },
+    filters.max && { key: 'max', label: `Up to ₹${Number(filters.max).toLocaleString('en-IN')}`, clear: { max: '' } },
+    filters.min && { key: 'min', label: `From ₹${Number(filters.min).toLocaleString('en-IN')}`, clear: { min: '' } },
+    filters.bhk && { key: 'bhk', label: `${filters.bhk} BHK`, clear: { bhk: '' } },
+    filters.furnishing && { key: 'fur', label: furnishingLabel(filters.furnishing), clear: { furnishing: '' } },
+    filters.verified && { key: 'ver', label: 'Verified only', clear: { verified: false } },
+  ].filter(Boolean)
 
   return (
     <div className="container-x py-8">
@@ -65,6 +73,25 @@ export default function Rentals() {
           </Button>
         </div>
       </div>
+
+      <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Property type">
+        {[{ slug: '', label: 'All types' }, ...categories.map((c) => ({ slug: c.slug, label: c.label }))].map((t) => (
+          <button key={t.slug || 'all'} type="button" role="tab" aria-selected={filters.category === t.slug} className="chip shrink-0 !px-4 !py-2" data-active={filters.category === t.slug} onClick={() => update({ ...filters, category: t.slug, bhk: '', page: 1 })}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {chips.length > 0 && (
+        <div className="mb-5 flex flex-wrap items-center gap-2" aria-label="Active filters">
+          {chips.map((c) => (
+            <button key={c.key} type="button" onClick={() => update({ ...filters, ...c.clear, page: 1 })} className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint px-3 py-1 text-xs font-semibold text-brand-deep hover:bg-brand hover:text-white">
+              {c.label} <X size={13} />
+            </button>
+          ))}
+          <button type="button" onClick={reset} className="text-xs font-semibold text-muted underline hover:text-brand">Clear all</button>
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-[19rem_1fr]">
         <aside className="card sticky top-28 hidden h-fit p-5 lg:block">
