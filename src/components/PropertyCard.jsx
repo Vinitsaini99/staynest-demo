@@ -57,7 +57,7 @@ export default function PropertyCard({ p, className = '' }) {
 
         <div className="mt-auto flex items-center justify-between pt-4 text-xs text-muted">
           {p.verified ? (
-            <span className="inline-flex items-center gap-1 font-bold text-emerald-700"><BadgeCheck size={15} /> Verified</span>
+            <span className="inline-flex items-center gap-1 font-bold text-emerald-700"><BadgeCheck size={15} /> Approved · Verified seller</span>
           ) : (
             <span>Owner listing</span>
           )}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, BadgeCheck, Building2, Home as HomeIcon, MapPinned, MessageCircle, PhoneCall, Search, ShieldCheck, Users, Wallet } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Building2, Home as HomeIcon, Mail, MapPinned, MessageCircle, PhoneCall, Search, Users, Wallet } from 'lucide-react'
 import SearchBar from '../components/SearchBar'
 import PropertyRow from '../components/PropertyRow'
 import PropertyArt from '../components/PropertyArt'
@@ -19,7 +19,7 @@ function CategoryRow({ cat }) {
   const { data, loading } = useAsync(() => getCategoryRow(cat.slug, 8), [cat.slug])
   return (
     <section className="container-x pt-14">
-      <SectionHead title={cat.label} text={cat.blurb} to={`/rentals?category=${cat.slug}`} linkLabel={`All ${cat.label.toLowerCase()}`} />
+      <SectionHead eyebrow="For rent" title={cat.label} text={cat.blurb} to={`/rentals?category=${cat.slug}`} linkLabel={`All ${cat.label.toLowerCase()}`} />
       {loading ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"><CardSkeleton count={4} /></div>
       ) : data?.length ? (
@@ -32,10 +32,10 @@ function CategoryRow({ cat }) {
 }
 
 const WHY = [
-  { icon: BadgeCheck, title: 'Verified-first listings', text: 'Listings are reviewed by our team before they go live, and checked homes carry a Verified badge.' },
-  { icon: PhoneCall, title: 'Talk to owners directly', text: 'Call or WhatsApp the owner from the listing page. No middle layers and no hidden steps.' },
-  { icon: Wallet, title: 'Clear numbers up front', text: 'Rent, deposit and maintenance are shown on every listing so you can compare honestly.' },
-  { icon: ShieldCheck, title: 'Safer renting', text: 'Simple tips and a report option help you avoid advance-payment traps and fake ads.' },
+  { icon: BadgeCheck, title: 'Verified listings', text: 'Our team reviews every listing before it goes live, and checked homes carry an Approved badge.' },
+  { icon: PhoneCall, title: 'Direct owner contact', text: 'Call or WhatsApp the owner from the listing page. No broker commission and no middlemen.' },
+  { icon: Wallet, title: 'Transparent pricing', text: 'Rent, deposit and maintenance are shown on every listing, so there are no surprises later.' },
+  { icon: MapPinned, title: 'All localities covered', text: 'Malviya Nagar, Vaishali Nagar, Mansarovar, Jagatpura, Sodala and more across Jaipur.' },
 ]
 
 const STEPS = [
@@ -67,8 +67,13 @@ export default function Home() {
               Find your next <span className="text-saffron">rental home</span> in the Pink City
             </h1>
             <p className="mt-4 max-w-xl text-base text-white/75 sm:text-lg">
-              Flats, independent houses, offices and sharing rooms across Malviya Nagar, Vaishali Nagar, Mansarovar and more, listed by owners and reviewed by us.
+              Search approved rental listings, compare rents side by side and contact owners instantly across Malviya Nagar, Vaishali Nagar, Mansarovar and more.
             </p>
+            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/85">
+              {['No brokers', 'No hidden charges', 'Direct owner contact'].map((t) => (
+                <li key={t} className="inline-flex items-center gap-1.5"><BadgeCheck size={16} className="text-saffron" /> {t}</li>
+              ))}
+            </ul>
             <div className="mt-7 flex flex-wrap gap-6 text-sm">
               {[
                 [sum?.total ?? '—', 'live listings'],
@@ -185,7 +190,24 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <p className="mt-4 text-center text-xs text-muted">Need help choosing? Call {SITE.phone} ({SITE.hours}).</p>
+      </section>
+
+      {/* Get in touch */}
+      <section className="container-x pt-16">
+        <div className="card grid items-center gap-6 p-6 sm:p-8 md:grid-cols-[1fr_auto]">
+          <div>
+            <h2 className="text-2xl font-extrabold">Get in touch</h2>
+            <p className="mt-1 text-sm text-muted">Need help choosing a home? Our team is available {SITE.hours.toLowerCase()}.</p>
+            <ul className="mt-4 space-y-2 text-sm font-semibold">
+              <li className="flex items-center gap-2"><Mail size={16} className="text-brand" /> <a href={`mailto:${SITE.email}`} className="hover:text-brand">{SITE.email}</a></li>
+              <li className="flex items-center gap-2"><MapPinned size={16} className="text-brand" /> {SITE.address}</li>
+            </ul>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button href={waLink()} target="_blank" rel="noreferrer" variant="whatsapp" size="lg"><MessageCircle size={18} /> WhatsApp</Button>
+            <Button href={`tel:${SITE.phoneTel}`} variant="dark" size="lg"><PhoneCall size={18} /> Call now ({SITE.phone})</Button>
+          </div>
+        </div>
       </section>
     </>
   )
