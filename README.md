@@ -1,6 +1,6 @@
-# Kota Ki Property
+# GharKhoj Jaipur
 
-A clean, minimal website for affordable PGs, hostels and rentals in Kota, Rajasthan (monthly rent, from ₹3,000) — built with React 19, Vite, Tailwind CSS v4, React Router and Framer Motion.
+A rental portal for Jaipur: flats, independent houses, commercial offices and sharing rooms. Built with React 19, Vite, Tailwind CSS v4 and React Router.
 
 ## Run locally
 
@@ -12,23 +12,25 @@ npm run build    # generates sitemap.xml + robots.txt, then builds to /dist
 
 Set `VITE_SITE_URL` (and `SITE_URL` for the sitemap script) to your production domain.
 
-## What's included
+## Features
 
-- Homepage: hero search, 7 categories (boys/girls PG, hostels, rooms, flats, houses, commercial), featured / recent listings, 12 Kota localities, list-your-property form, how it works, reviews, guides
-- Listing pages (all / PG & hostels / boys PG / girls PG / rooms / flats / houses / commercial) with URL-synced filters, sorting, grid/list view and pagination
-- Location pages, property detail pages (gallery + lightbox, specs, amenities, map, enquiry, WhatsApp, similar properties)
-- Owner listing flow with validation and image upload, contact page, login/register, user dashboard (saved, submissions, enquiries, profile)
-- Insights articles, privacy and terms templates
-- SEO: dynamic titles/meta/Open Graph/JSON-LD, clean URLs, sitemap.xml, robots.txt
+- Home: hero search (type, locality, budget, keyword), category tiles, a scrolling row per category, why-us, how it works, locality chips, owner CTA
+- `/rentals`: URL-synced filters (type, locality, min/max rent, BHK, furnishing, verified), sorting, pagination, mobile filter drawer
+- `/property/:slug`: gallery, key facts, amenities, rent/deposit/maintenance, call + WhatsApp, enquiry form, save and share, similar listings
+- Accounts: tenant and owner sign-up with email verification code, login, shortlist, enquiries, profile
+- Owner dashboard: add/edit/delete listings with photo upload; every new or edited listing waits for admin approval
+- Admin panel (`/admin-login`): approve/reject listings, mark verified/featured, view users, enquiries and contact messages
+- Contact, About, Privacy and Terms pages, SEO meta/JSON-LD, sitemap and robots
 
-## Data & backend
+## Backend
 
-No backend API exists in this project, so `src/services/api.js` is a backend-ready service layer backed by sample data (`src/data/properties.js`, all flagged `demo: true`) and `localStorage`. Replace the function bodies with `fetch()` calls to go live — the UI only depends on their signatures.
+There is no real backend yet. `src/services/api.js` is a backend-ready service layer on top of `localStorage`; replace its function bodies with `fetch()` calls to go live. The UI depends only on the function signatures.
 
-- Owner submissions are saved as *Pending Review* and are **not** published automatically.
-- Reviews shown on the homepage are only those submitted by visitors; none are pre-written.
-- Location/category counts are derived from real data and hidden when zero.
+- Demo admin: `admin@gharkhoj.demo` / `Admin@123` (defined in `src/config/site.js`; change before launch).
+- Email verification is simulated: the 6-digit code is shown on screen instead of emailed.
+- Data is per browser. Passwords are hashed client-side only, which is not real security.
+- Sample listings (`src/data/properties.js`) are flagged `demo: true` and use placeholder phone numbers.
 
-## Before launch — replace placeholders
+## Before launch
 
-`src/config/site.js`: phone, WhatsApp number, email, address, hours and social links are placeholders. Replace the sample listings and have the legal pages reviewed by a professional.
+Replace the placeholder phone, WhatsApp, email and address in `src/config/site.js`, remove the sample listings, add a real backend, and have the legal pages reviewed.

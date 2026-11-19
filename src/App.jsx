@@ -1,58 +1,44 @@
-import { lazy, Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
+import Protected from './components/layout/Protected'
 import Home from './pages/Home'
-import { Skeleton } from './components/ui/States'
-import { listingPages } from './data/categories'
-
-const lazyNamed = (loader, name) => lazy(() => loader().then((m) => ({ default: m[name] })))
-
-const ListingPage = lazyNamed(() => import('./pages/ListingPage'), 'ListingPage')
-const LocationPage = lazyNamed(() => import('./pages/ListingPage'), 'LocationPage')
-const LocationsIndex = lazyNamed(() => import('./pages/ListingPage'), 'LocationsIndex')
-const PropertyDetail = lazy(() => import('./pages/PropertyDetail'))
-const Sell = lazy(() => import('./pages/Sell'))
-const About = lazy(() => import('./pages/About'))
-const Contact = lazy(() => import('./pages/Contact'))
-const Auth = lazy(() => import('./pages/Auth'))
-const Dashboard = lazy(() => import('./pages/Dashboard'))
-const InsightsIndex = lazyNamed(() => import('./pages/Insights'), 'InsightsIndex')
-const Article = lazyNamed(() => import('./pages/Insights'), 'Article')
-const Privacy = lazyNamed(() => import('./pages/Legal'), 'Privacy')
-const Terms = lazyNamed(() => import('./pages/Legal'), 'Terms')
-const NotFound = lazy(() => import('./pages/NotFound'))
-
-const listingPaths = listingPages.map((p) => p.path)
-
-const Fallback = () => (
-  <div className="container-x py-16"><Skeleton className="h-10 w-1/3" /><Skeleton className="mt-6 h-64 w-full" /></div>
-)
+import Rentals from './pages/Rentals'
+import PropertyDetail from './pages/PropertyDetail'
+import Contact from './pages/Contact'
+import { About, NotFound, Privacy, Terms } from './pages/Static'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import VerifyEmail from './pages/auth/VerifyEmail'
+import UserDashboard from './pages/dashboard/UserDashboard'
+import SellerDashboard from './pages/dashboard/SellerDashboard'
+import ListingForm from './pages/dashboard/ListingForm'
+import AdminPanel from './pages/dashboard/AdminPanel'
 
 export default function App() {
   return (
-    <Suspense fallback={<Fallback />}>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<Home />} />
-          {listingPaths.map((p) => <Route key={p} path={p} element={<ListingPage path={p} />} />)}
-          <Route path="/locations" element={<LocationsIndex />} />
-          <Route path="/locations/:slug" element={<LocationPage />} />
-          <Route path="/property/:slug" element={<PropertyDetail />} />
-          <Route path="/sell-your-property" element={<Sell />} />
-          <Route path="/about-us" element={<About />} />
-          <Route path="/contact-us" element={<Contact />} />
-          <Route path="/login" element={<Auth mode="login" />} />
-          <Route path="/register" element={<Auth mode="register" />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/insights" element={<InsightsIndex />} />
-          <Route path="/insights/:slug" element={<Article />} />
-          <Route path="/privacy-policy" element={<Privacy />} />
-          <Route path="/terms-and-conditions" element={<Terms />} />
-          <Route path="/buy-property" element={<Navigate to="/properties" replace />} />
-          <Route path="/sell" element={<Navigate to="/sell-your-property" replace />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="rentals" element={<Rentals />} />
+        <Route path="property/:slug" element={<PropertyDetail />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="about" element={<About />} />
+        <Route path="privacy" element={<Privacy />} />
+        <Route path="terms" element={<Terms />} />
+
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="verify-email" element={<VerifyEmail />} />
+        <Route path="admin-login" element={<Login admin />} />
+
+        <Route path="user" element={<Protected roles={['tenant', 'seller']}><UserDashboard /></Protected>} />
+        <Route path="seller" element={<Protected roles={['seller']}><SellerDashboard /></Protected>} />
+        <Route path="seller/new" element={<Protected roles={['seller']}><ListingForm /></Protected>} />
+        <Route path="seller/edit/:id" element={<Protected roles={['seller']}><ListingForm /></Protected>} />
+        <Route path="admin" element={<Protected roles={['admin']} admin><AdminPanel /></Protected>} />
+
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   )
 }

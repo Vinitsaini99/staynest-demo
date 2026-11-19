@@ -28,10 +28,10 @@ function setCanonical(href) {
 export function useSeo({ title, description, path = '', image, type = 'website', noindex = false, jsonLd } = {}) {
   const ld = jsonLd ? JSON.stringify(jsonLd) : ''
   useEffect(() => {
-    const fullTitle = title ? (title.includes(SITE.name) ? title : `${title} | ${SITE.name}`) : `${SITE.name} – Property in Kota`
+    const fullTitle = title ? (title.includes(SITE.name) ? title : `${title} | ${SITE.name}`) : `${SITE.name} – Rentals in Jaipur`
     const url = `${SITE.url}${path}`
     const desc = description || SITE.tagline
-    const img = image || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&h=630&q=80'
+    const img = image || `${SITE.url}/favicon.svg`
     document.title = fullTitle
     setMeta('name', 'description', desc)
     setMeta('name', 'robots', noindex ? 'noindex,nofollow' : 'index,follow')

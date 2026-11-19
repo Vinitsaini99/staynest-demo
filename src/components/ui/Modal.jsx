@@ -1,11 +1,9 @@
 import { useEffect } from 'react'
-import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 
-export default function Modal({ open, onClose, title, children, wide = false, side = false }) {
+export default function Modal({ open, onClose, title, children, wide }) {
   useEffect(() => {
-    if (!open) return
+    if (!open) return undefined
     const onKey = (e) => e.key === 'Escape' && onClose()
     document.addEventListener('keydown', onKey)
     const prev = document.body.style.overflow
@@ -16,31 +14,24 @@ export default function Modal({ open, onClose, title, children, wide = false, si
     }
   }, [open, onClose])
 
-  return createPortal(
-    <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 z-[100] flex" role="dialog" aria-modal="true" aria-label={title}>
-          <motion.div className="absolute inset-0 bg-forest/60 backdrop-blur-[2px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
-          <motion.div
-            className={
-              side
-                ? 'relative ml-auto flex h-full w-full max-w-md flex-col bg-ivory shadow-2xl'
-                : `relative m-auto flex max-h-[92vh] w-[calc(100%-2rem)] flex-col bg-ivory shadow-2xl ${wide ? 'max-w-3xl' : 'max-w-lg'}`
-            }
-            initial={side ? { x: '100%' } : { opacity: 0, y: 20 }}
-            animate={side ? { x: 0 } : { opacity: 1, y: 0 }}
-            exit={side ? { x: '100%' } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="flex items-center justify-between border-b border-line px-6 py-4">
-              <h2 className="text-xl text-forest">{title}</h2>
-              <button onClick={onClose} aria-label="Close" className="p-1.5 text-forest hover:bg-stone"><X size={20} /></button>
-            </div>
-            <div className="overflow-y-auto p-6">{children}</div>
-          </motion.div>
+  if (!open) return null
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-ink/60 p-0 backdrop-blur-sm sm:items-center sm:p-4" onMouseDown={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onMouseDown={(e) => e.stopPropagation()}
+        className={`max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-white p-5 shadow-lift sm:rounded-3xl sm:p-7 ${wide ? 'sm:max-w-2xl' : 'sm:max-w-md'}`}
+      >
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <h2 className="text-xl font-bold">{title}</h2>
+          <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1.5 text-muted hover:bg-sand">
+            <X size={20} />
+          </button>
         </div>
-      )}
-    </AnimatePresence>,
-    document.body,
+        {children}
+      </div>
+    </div>
   )
 }

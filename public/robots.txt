@@ -1,7 +1,11 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /seller
+Disallow: /user
 Disallow: /login
 Disallow: /register
+Disallow: /verify-email
 
-Sitemap: https://kotakiproperty.com/sitemap.xml
+Sitemap: https://gharkhoj-jaipur.vercel.app/sitemap.xml

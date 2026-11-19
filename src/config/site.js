@@ -1,48 +1,27 @@
-// Central brand + contact configuration.
-// NOTE: phone / WhatsApp / email / social URLs are placeholders — replace with real business details before launch.
+// Site-wide settings. Replace the placeholder contact details before going live.
 export const SITE = {
-  name: 'Kota Ki Property',
-  tagline: 'Your Trusted Destination for Properties in Kota.',
-  url: (import.meta.env && import.meta.env.VITE_SITE_URL) || 'https://kotakiproperty.com',
-  city: 'Kota',
+  name: 'GharKhoj Jaipur',
+  short: 'GharKhoj',
+  url: (import.meta.env.VITE_SITE_URL || 'https://gharkhoj-jaipur.vercel.app').replace(/\/$/, ''),
+  tagline: 'Verified rentals in Jaipur: flats, independent houses, offices and sharing rooms with direct owner contact.',
+  city: 'Jaipur',
   state: 'Rajasthan',
-  phone: '+91 99999 99999',
-  phoneRaw: '919999999999',
-  whatsapp: '919999999999',
-  email: 'hello@kotakiproperty.com',
-  address: 'Kota, Rajasthan, India',
-  hours: 'Mon – Sat, 10:00 AM – 7:00 PM',
-  social: {
-    facebook: 'https://www.facebook.com/',
-    instagram: 'https://www.instagram.com/',
-    youtube: 'https://www.youtube.com/',
-    linkedin: 'https://www.linkedin.com/',
-  },
+  phone: '+91 90000 00000',
+  phoneTel: '+919000000000',
+  whatsapp: '919000000000',
+  email: 'hello@gharkhoj.example',
+  address: 'Jaipur, Rajasthan, India',
+  hours: '9:00 AM to 8:00 PM, all days',
 }
 
-export const NAV = [
-  { label: 'Home', to: '/' },
-  {
-    label: 'PG & Hostels',
-    to: '/pg-hostels',
-    children: [
-      { label: 'Boys PG', to: '/boys-pg' },
-      { label: 'Girls PG', to: '/girls-pg' },
-      { label: 'Hostels & Co-living', to: '/hostels' },
-    ],
-  },
-  {
-    label: 'Rent',
-    to: '/rent',
-    children: [
-      { label: 'Rooms', to: '/rooms-for-rent' },
-      { label: 'Flats', to: '/flats-for-rent' },
-      { label: 'Houses', to: '/houses-for-rent' },
-      { label: 'Shops & Offices', to: '/shops-offices-for-rent' },
-    ],
-  },
-  { label: 'All Listings', to: '/properties' },
-  { label: 'Locations', to: '/locations' },
-  { label: 'About Us', to: '/about-us' },
-  { label: 'Contact Us', to: '/contact-us' },
-]
+export const waLink = (text = 'Hi, I found your listing on GharKhoj Jaipur.') =>
+  `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`
+
+export const ownerWaLink = (phone, text) => {
+  const digits = String(phone || '').replace(/\D/g, '')
+  const num = digits.length === 10 ? `91${digits}` : digits
+  return `https://wa.me/${num}?text=${encodeURIComponent(text)}`
+}
+
+// Demo-only admin account (the app has no real backend yet). Change before launch.
+export const DEMO_ADMIN = { name: 'Site Admin', email: 'admin@gharkhoj.demo', password: 'Admin@123' }

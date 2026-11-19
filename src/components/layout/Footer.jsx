@@ -1,81 +1,50 @@
 import { Link } from 'react-router-dom'
-import { Mail, MapPin, Phone, Clock } from 'lucide-react'
+import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import Logo from './Logo'
 import { SITE } from '../../config/site'
 import { categories } from '../../data/categories'
-import { locations } from '../../data/locations'
-import Logo from './Logo'
-import SocialIcon from './SocialIcons'
+import { localities } from '../../data/localities'
 
-const quick = [
-  { label: 'All Listings', to: '/properties' },
-  { label: 'List Your Property', to: '/sell-your-property' },
-  { label: 'PG & Hostels', to: '/pg-hostels' },
-  { label: 'Rent', to: '/rent' },
-  { label: 'Locations', to: '/locations' },
-  { label: 'Insights', to: '/insights' },
-  { label: 'About Us', to: '/about-us' },
-  { label: 'Contact Us', to: '/contact-us' },
-]
-
-const ColTitle = ({ children }) => <h3 className="mb-5 font-sans text-[0.72rem] font-bold uppercase tracking-[0.22em] text-gold">{children}</h3>
-const linkCls = 'block py-1 text-sm text-ivory/70 transition-colors hover:text-gold'
+const h = 'mb-3 text-sm font-extrabold uppercase tracking-wider text-saffron'
+const a = 'block py-1 text-sm text-white/70 transition-colors hover:text-white'
 
 export default function Footer() {
   return (
-    <footer className="bg-forest pb-20 text-ivory lg:pb-0">
-      <div className="container-x pt-16">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <Logo light />
-            <p className="mt-6 max-w-sm text-sm leading-relaxed text-ivory/70">
-              {SITE.tagline} Find affordable PGs, hostels, rooms and rental homes across Kota's best localities.
-            </p>
-            <div className="mt-6 flex gap-2">
-              {Object.entries(SITE.social).map(([name, href]) => (
-                <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={name} className="grid h-9 w-9 place-items-center border border-ivory/20 text-ivory/80 transition-colors hover:border-gold hover:bg-gold hover:text-forest">
-                  <SocialIcon name={name} />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:col-span-8">
-            <div>
-              <ColTitle>Quick Links</ColTitle>
-              {quick.map((l) => <Link key={l.to} to={l.to} className={linkCls}>{l.label}</Link>)}
-            </div>
-            <div>
-              <ColTitle>Categories</ColTitle>
-              {categories.map((c) => <Link key={c.slug} to={c.path} className={linkCls}>{c.label}</Link>)}
-            </div>
-            <div>
-              <ColTitle>Popular Locations</ColTitle>
-              {locations.slice(0, 8).map((l) => <Link key={l.slug} to={`/locations/${l.slug}`} className={linkCls}>{l.name}</Link>)}
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <ColTitle>Contact</ColTitle>
-              <ul className="space-y-3 text-sm text-ivory/70">
-                <li className="flex gap-2.5"><MapPin size={15} className="mt-0.5 shrink-0 text-gold" />{SITE.address}</li>
-                <li><a href={`tel:+${SITE.phoneRaw}`} className="flex gap-2.5 hover:text-gold"><Phone size={15} className="mt-0.5 shrink-0 text-gold" />{SITE.phone}</a></li>
-                <li><a href={`mailto:${SITE.email}`} className="flex gap-2.5 break-all hover:text-gold"><Mail size={15} className="mt-0.5 shrink-0 text-gold" />{SITE.email}</a></li>
-                <li className="flex gap-2.5"><Clock size={15} className="mt-0.5 shrink-0 text-gold" />{SITE.hours}</li>
-              </ul>
-            </div>
-          </div>
+    <footer className="mt-20 bg-ink pb-24 text-white md:pb-0">
+      <div className="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr]">
+        <div>
+          <Logo light />
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/65">{SITE.tagline}</p>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-ivory/15 py-6 text-xs text-ivory/55 md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
-          <div className="flex flex-wrap gap-x-5 gap-y-1">
-            <Link to="/privacy-policy" className="hover:text-gold">Privacy Policy</Link>
-            <Link to="/terms-and-conditions" className="hover:text-gold">Terms &amp; Conditions</Link>
-            <Link to="/about-us" className="hover:text-gold">About Us</Link>
-            <Link to="/contact-us" className="hover:text-gold">Contact</Link>
+        <div>
+          <h3 className={h}>Browse</h3>
+          {categories.map((c) => <Link key={c.slug} to={`/rentals?category=${c.slug}`} className={a}>{c.label}</Link>)}
+          <Link to="/rentals" className={a}>All rentals</Link>
+        </div>
+
+        <div>
+          <h3 className={h}>Popular areas</h3>
+          {localities.slice(0, 6).map((l) => <Link key={l.name} to={`/rentals?locality=${encodeURIComponent(l.name)}`} className={a}>{l.name}</Link>)}
+        </div>
+
+        <div>
+          <h3 className={h}>Get in touch</h3>
+          <ul className="space-y-2.5 text-sm text-white/70">
+            <li className="flex gap-2"><Phone size={16} className="mt-0.5 shrink-0 text-saffron" /> <a href={`tel:${SITE.phoneTel}`} className="hover:text-white">{SITE.phone}</a></li>
+            <li className="flex gap-2"><Mail size={16} className="mt-0.5 shrink-0 text-saffron" /> <a href={`mailto:${SITE.email}`} className="hover:text-white">{SITE.email}</a></li>
+            <li className="flex gap-2"><MapPin size={16} className="mt-0.5 shrink-0 text-saffron" /> {SITE.address}</li>
+            <li className="flex gap-2"><Clock size={16} className="mt-0.5 shrink-0 text-saffron" /> {SITE.hours}</li>
+          </ul>
+          <div className="mt-4 flex gap-4 text-sm text-white/70">
+            <Link to="/about" className="hover:text-white">About</Link>
+            <Link to="/privacy" className="hover:text-white">Privacy</Link>
+            <Link to="/terms" className="hover:text-white">Terms</Link>
           </div>
         </div>
-        <p className="border-t border-ivory/10 pb-8 pt-5 text-[0.7rem] leading-relaxed text-ivory/40">
-          Listings shown are sample demonstration data. Property details, prices and availability must be independently verified with the owner before paying any rent or deposit.
-        </p>
+      </div>
+      <div className="border-t border-white/10 py-5 text-center text-xs text-white/50">
+        © {new Date().getFullYear()} {SITE.name}. Listings are provided by owners; always visit a property before paying a deposit.
       </div>
     </footer>
   )

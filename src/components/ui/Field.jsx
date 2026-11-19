@@ -1,53 +1,49 @@
 import { useId } from 'react'
 
-export function Field({ label, error, hint, required, children, className = '', htmlFor }) {
+export function Field({ label, error, hint, required, children, className = '' }) {
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={htmlFor} className="mb-1.5 block text-[0.78rem] font-semibold uppercase tracking-wider text-forest">
+        <label className="mb-1.5 block text-[0.8rem] font-bold text-ink-soft">
           {label}
-          {required && <span className="ml-0.5 text-[#b4412f]">*</span>}
+          {required && <span className="text-red-600"> *</span>}
         </label>
       )}
       {children}
       {hint && !error && <p className="mt-1 text-xs text-muted">{hint}</p>}
-      {error && <p role="alert" className="mt-1 text-xs font-medium text-[#b4412f]">{error}</p>}
+      {error && <p className="mt-1 text-xs font-semibold text-red-600" role="alert">{error}</p>}
     </div>
   )
 }
 
-export function Input({ label, error, hint, required, className = '', wrapperClass = '', ...rest }) {
+export function Input({ label, error, hint, required, className = '', ...props }) {
   const id = useId()
   return (
-    <Field label={label} error={error} hint={hint} required={required} className={wrapperClass} htmlFor={id}>
-      <input id={id} className={`field ${className}`} aria-invalid={!!error} {...rest} />
+    <Field label={label} error={error} hint={hint} required={required} className={className}>
+      <input id={id} className="field" aria-invalid={!!error} {...props} />
     </Field>
   )
 }
 
-const CARET = "bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23142D27%22 stroke-width=%222%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_0.85rem_center] bg-no-repeat"
-
-export function Select({ label, error, hint, required, options, placeholder, className = '', wrapperClass = '', ...rest }) {
+export function Textarea({ label, error, hint, required, className = '', rows = 4, ...props }) {
   const id = useId()
   return (
-    <Field label={label} error={error} hint={hint} required={required} className={wrapperClass} htmlFor={id}>
-      <select id={id} className={`field appearance-none pr-9 ${CARET} ${className}`} aria-invalid={!!error} {...rest}>
+    <Field label={label} error={error} hint={hint} required={required} className={className}>
+      <textarea id={id} rows={rows} className="field resize-y" aria-invalid={!!error} {...props} />
+    </Field>
+  )
+}
+
+export function Select({ label, error, hint, required, className = '', options = [], placeholder, ...props }) {
+  const id = useId()
+  return (
+    <Field label={label} error={error} hint={hint} required={required} className={className}>
+      <select id={id} className="field" aria-invalid={!!error} {...props}>
         {placeholder !== undefined && <option value="">{placeholder}</option>}
-        {options.map((o) => {
-          const v = typeof o === 'object' ? o.value : o
-          const l = typeof o === 'object' ? o.label : o
-          return <option key={v} value={v}>{l}</option>
-        })}
+        {options.map((o) => (
+          <option key={o.value ?? o} value={o.value ?? o}>{o.label ?? o}</option>
+        ))}
       </select>
-    </Field>
-  )
-}
-
-export function Textarea({ label, error, hint, required, className = '', wrapperClass = '', ...rest }) {
-  const id = useId()
-  return (
-    <Field label={label} error={error} hint={hint} required={required} className={wrapperClass} htmlFor={id}>
-      <textarea id={id} className={`field min-h-28 resize-y ${className}`} aria-invalid={!!error} {...rest} />
     </Field>
   )
 }

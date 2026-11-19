@@ -1,224 +1,248 @@
-import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { Bath, BedDouble, Check, Compass, Heart, Layers, Maximize, MessageCircle, Phone, Share2, ShieldCheck, Sofa, Sparkles, Info, Users, UtensilsCrossed, Wallet } from 'lucide-react'
-import { SITE } from '../config/site'
-import { getCategory } from '../data/categories'
-import { locations } from '../data/locations'
+import { BadgeCheck, BedDouble, Bath, CalendarDays, Check, Heart, Layers, MapPin, Maximize2, MessageCircle, Phone, Share2, Sofa, Users } from 'lucide-react'
+import PropertyArt from '../components/PropertyArt'
+import PropertyCard from '../components/PropertyCard'
+import Button from '../components/ui/Button'
+import { Input, Textarea } from '../components/ui/Field'
+import { Badge, StatusBadge } from '../components/ui/Bits'
+import { Empty, Spinner } from '../components/ui/States'
+import { useApp } from '../context/AppContext'
 import { useAsync } from '../hooks/useAsync'
 import { useSeo } from '../hooks/useSeo'
-import { useApp } from '../context/AppContext'
-import { getProperty, getSimilar, pushRecent } from '../services/api'
-import { formatArea, formatDate, formatPrice } from '../utils/format'
-import { imgSrc } from '../utils/image'
-import { Badge, Breadcrumbs, SectionHead } from '../components/ui/Bits'
-import { Button, LinkButton } from '../components/ui/Button'
-import { ErrorState, Skeleton } from '../components/ui/States'
-import Gallery from '../components/property/Gallery'
-import EnquiryForm, { whatsappLink } from '../components/property/EnquiryForm'
-import PropertyCard from '../components/property/PropertyCard'
-import NotFound from './NotFound'
+import { createEnquiry, getProperty, similarProperties } from '../services/api'
+import { categoryBySlug, furnishingLabel } from '../data/categories'
+import { SITE, ownerWaLink } from '../config/site'
+import { formatArea, formatDate, formatPrice, formatRupees, pricePerSqft } from '../utils/format'
+import { cleanPhone, emailRule, minLen, phoneRule, required, validate } from '../utils/validation'
 
-function Spec({ icon: Icon, label, value }) {
+function Gallery({ p }) {
+  const [i, setI] = useState(0)
+  const imgs = p.images || []
   return (
-    <div className="flex items-center gap-3 bg-white p-4">
-      <Icon size={20} strokeWidth={1.5} className="shrink-0 text-gold-deep" />
-      <div><p className="text-[0.66rem] font-bold uppercase tracking-wider text-muted">{label}</p><p className="text-sm font-semibold text-forest">{value}</p></div>
-    </div>
-  )
-}
-
-function DetailSkeleton() {
-  return (
-    <div className="container-x py-10">
-      <Skeleton className="h-4 w-64" />
-      <div className="mt-6 grid gap-10 lg:grid-cols-[1fr_380px]">
-        <div><Skeleton className="aspect-[16/10] w-full" /><Skeleton className="mt-6 h-9 w-2/3" /><Skeleton className="mt-3 h-5 w-1/3" /><Skeleton className="mt-8 h-40 w-full" /></div>
-        <Skeleton className="h-96 w-full" />
+    <div>
+      <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-line bg-brand-tint">
+        {imgs.length ? <img src={imgs[i]} alt={`${p.title} photo ${i + 1}`} className="h-full w-full object-cover" /> : <PropertyArt category={p.category} seed={p.id} />}
+        {p.demo && <span className="absolute bottom-3 right-3 rounded-lg bg-ink/80 px-2.5 py-1 text-[0.7rem] font-bold text-white">Sample listing · illustration</span>}
       </div>
+      {imgs.length > 1 && (
+        <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto">
+          {imgs.map((src, k) => (
+            <button key={k} type="button" onClick={() => setI(k)} aria-label={`Show photo ${k + 1}`} className={`h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 ${k === i ? 'border-brand' : 'border-transparent opacity-70'}`}>
+              <img src={src} alt="" className="h-full w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
-function Detail({ p }) {
-  const { isSaved, toggleWishlist } = useApp()
-  const loc = locations.find((l) => l.slug === p.locality)
-  const cat = getCategory(p.category)
-  const similar = useAsync(() => getSimilar(p), [p.id])
-  const url = `${SITE.url}/property/${p.slug}`
+function EnquiryForm({ p }) {
+  const { user } = useApp()
+  const [v, setV] = useState({ name: user?.name || '', phone: user?.phone || '', email: user?.email || '', message: `Hi, I am interested in "${p.title}". Is it still available?` })
+  const [errors, setErrors] = useState({})
+  const [busy, setBusy] = useState(false)
+  const [sent, setSent] = useState(false)
+  const set = (k) => (e) => setV((s) => ({ ...s, [k]: e.target.value }))
 
-  useEffect(() => pushRecent(p.id), [p.id])
-
-  useSeo({
-    title: `${p.title} – ${formatPrice(p.price)}/month`,
-    description: `${p.propertyType} for rent in ${loc?.name}, Kota from ${formatPrice(p.price)}/month. ${p.description.slice(0, 110)}…`,
-    path: `/property/${p.slug}`,
-    image: imgSrc(p.images[0], 1200),
-    type: 'article',
-    jsonLd: [
-      {
-        '@context': 'https://schema.org', '@type': 'RealEstateListing', name: p.title, description: p.description, url,
-        image: p.images.map((i) => imgSrc(i, 1200)), datePosted: p.listedAt,
-        offers: { '@type': 'Offer', price: p.price, priceCurrency: 'INR', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'INR', unitText: 'MONTH' } },
-        address: { '@type': 'PostalAddress', addressLocality: loc?.name, addressRegion: 'Rajasthan', addressCountry: 'IN' },
-        floorSize: { '@type': 'QuantitativeValue', value: p.areaSqft, unitCode: 'FTK' },
-      },
-      {
-        '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
-          { '@type': 'ListItem', position: 2, name: cat?.label, item: `${SITE.url}${cat?.path.split('?')[0]}` },
-          { '@type': 'ListItem', position: 3, name: p.title, item: url },
-        ],
-      },
-    ],
-  })
-
-  const share = async () => {
+  const submit = async (e) => {
+    e.preventDefault()
+    const errs = validate(v, { name: [required('Name'), minLen('Name', 2)], phone: [phoneRule], email: [emailRule], message: [minLen('Message', 10)] })
+    setErrors(errs)
+    if (Object.keys(errs).length) return
+    setBusy(true)
     try {
-      if (navigator.share) await navigator.share({ title: p.title, url })
-      else { await navigator.clipboard.writeText(url); toast.success('Link copied to clipboard') }
-    } catch { /* user cancelled */ }
+      await createEnquiry({ propertyId: p.id, ...v, phone: cleanPhone(v.phone) })
+      setSent(true)
+      toast.success('Enquiry sent to the owner')
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setBusy(false)
+    }
   }
 
-  const specs = [
-    p.bhk > 0 && { icon: BedDouble, label: 'Bedrooms', value: `${p.bhk} BHK` },
-    p.gender && { icon: Users, label: 'Suitable for', value: p.gender },
-    p.sharing && { icon: UtensilsCrossed, label: 'Meals', value: p.food ? 'Included' : 'Not included' },
-    p.bathrooms > 0 && { icon: Bath, label: 'Bathrooms', value: p.bathrooms },
-    p.deposit && { icon: Wallet, label: 'Security deposit', value: formatPrice(p.deposit) },
-    { icon: Maximize, label: p.sharing ? 'Room size' : 'Area', value: formatArea(p.areaSqft) },
-    p.floor && { icon: Layers, label: 'Floor', value: p.floor },
-    p.facing && { icon: Compass, label: 'Facing', value: p.facing },
-    p.furnishing && { icon: Sofa, label: 'Furnishing', value: p.furnishing },
-  ].filter(Boolean)
-
-  const rows = [
-    ['Property type', p.propertyType], ['Status', p.status], ['Locality', `${loc?.name}, Kota`], ['Listed on', formatDate(p.listedAt)],
-    ['Listed by', `${p.seller.name} (${p.seller.type})`], ['Reference ID', p.id],
-  ]
+  if (sent) {
+    return (
+      <div className="card p-6 text-center">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-emerald-100 text-emerald-700"><Check /></span>
+        <h3 className="mt-3 text-lg font-bold">Enquiry sent</h3>
+        <p className="mt-1 text-sm text-muted">The owner will get back to you shortly. You can also call or WhatsApp directly.</p>
+      </div>
+    )
+  }
 
   return (
-    <>
-      <div className="border-b border-line bg-white">
-        <div className="container-x py-4"><Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: cat?.label, to: cat?.path }, { label: loc?.name, to: `/locations/${p.locality}` }, { label: p.title }]} /></div>
+    <form onSubmit={submit} className="card space-y-3 p-5" noValidate>
+      <h3 className="text-lg font-bold">Send an enquiry</h3>
+      <Input label="Your name" value={v.name} onChange={set('name')} error={errors.name} required />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Input label="Mobile" inputMode="tel" value={v.phone} onChange={set('phone')} error={errors.phone} required />
+        <Input label="Email" type="email" value={v.email} onChange={set('email')} error={errors.email} required />
       </div>
-
-      <div className="container-x py-8 md:py-12">
-        <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
-          <div className="min-w-0">
-            <Gallery images={p.images} title={p.title} />
-
-            <div className="mt-8 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="mb-3 flex flex-wrap gap-2">
-                  {p.featured && <Badge tone="gold"><Sparkles size={11} /> Featured</Badge>}
-                  {p.verified ? <Badge tone="forest"><ShieldCheck size={11} /> Verified</Badge> : <Badge tone="outline">Verification pending</Badge>}
-                  <Badge tone="outline">{p.status}</Badge>
-                </div>
-                <h1 className="text-3xl leading-tight text-forest md:text-4xl">{p.title}</h1>
-                <p className="mt-2 text-muted">{p.address}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-display text-4xl text-forest">{formatPrice(p.price)}<span className="font-sans text-base font-normal text-muted"> /month</span></p>
-                <p className="mt-1 text-xs text-muted">{p.sharing ? 'per month, per bed (from)' : 'per month'}{p.deposit ? ' · Deposit '+formatPrice(p.deposit) : ''}</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button variant={isSaved(p.id) ? 'primary' : 'outline'} size="sm" onClick={() => toggleWishlist(p.id)}><Heart size={15} className={isSaved(p.id) ? 'fill-current' : ''} /> {isSaved(p.id) ? 'Saved' : 'Save'}</Button>
-              <Button variant="outline" size="sm" onClick={share}><Share2 size={15} /> Share</Button>
-            </div>
-
-            <div className="mt-8 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">{specs.map((s) => <Spec key={s.label} {...s} />)}</div>
-
-            {p.sharingPrices && (
-              <section className="mt-12">
-                <h2 className="text-2xl text-forest">Rent per bed</h2>
-                <dl className="mt-5 divide-y divide-line border border-line bg-white">
-                  {Object.entries(p.sharingPrices).sort((a, b) => b[1] - a[1]).map(([k, v]) => (
-                    <div key={k} className="flex items-center justify-between px-5 py-3.5 text-sm"><dt className="font-medium text-forest">{k} sharing</dt><dd className="font-display text-xl text-forest">{formatPrice(v)}<span className="font-sans text-xs text-muted"> /month</span></dd></div>
-                  ))}
-                </dl>
-              </section>
-            )}
-
-            <section className="mt-12">
-              <h2 className="text-2xl text-forest">About this property</h2>
-              <p className="mt-4 leading-[1.85] text-[#3b423d]">{p.description}</p>
-            </section>
-
-            {p.amenities.length > 0 && (
-              <section className="mt-12">
-                <h2 className="text-2xl text-forest">Amenities</h2>
-                <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {p.amenities.map((a) => <li key={a} className="flex items-center gap-2.5 text-sm"><Check size={16} className="text-gold-deep" />{a}</li>)}
-                </ul>
-              </section>
-            )}
-
-            <section className="mt-12">
-              <h2 className="text-2xl text-forest">Property details</h2>
-              <dl className="mt-5 divide-y divide-line border border-line bg-white">
-                {rows.map(([k, v]) => <div key={k} className="grid grid-cols-2 gap-4 px-5 py-3 text-sm"><dt className="text-muted">{k}</dt><dd className="font-medium text-forest">{v}</dd></div>)}
-              </dl>
-            </section>
-
-            <section className="mt-12">
-              <h2 className="text-2xl text-forest">Location</h2>
-              <p className="mt-2 text-sm text-muted">Showing the general area of {loc?.name}, Kota. Exact address is shared by the owner on enquiry.</p>
-              <div className="mt-5 aspect-[16/8] overflow-hidden border border-line bg-stone">
-                <iframe title={`Map of ${loc?.name}, Kota`} src={`https://www.google.com/maps?q=${encodeURIComponent(loc?.query || 'Kota, Rajasthan')}&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-full w-full border-0" />
-              </div>
-            </section>
-
-            {p.demo && (
-              <p className="mt-10 flex gap-3 border border-line bg-white p-4 text-xs leading-relaxed text-muted"><Info size={16} className="mt-0.5 shrink-0 text-gold-deep" />This is a sample listing used to demonstrate the platform. Details, photos and pricing are illustrative and not an offer to rent.</p>
-            )}
-          </div>
-
-          <aside>
-            <div className="sticky top-32 space-y-5">
-              <div className="border border-line bg-white p-6">
-                <p className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-gold-deep">Listed by</p>
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="grid h-11 w-11 place-items-center bg-forest font-display text-lg text-gold">{p.seller.name[0]}</span>
-                  <div><p className="font-semibold text-forest">{p.seller.name}</p><p className="text-xs text-muted">{p.seller.type}</p></div>
-                </div>
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  <LinkButton href={`tel:+${SITE.phoneRaw}`} variant="primary" size="md"><Phone size={15} /> Call Now</LinkButton>
-                  <LinkButton href={whatsappLink(p)} target="_blank" rel="noopener noreferrer" variant="whatsapp" size="md"><MessageCircle size={15} /> WhatsApp</LinkButton>
-                </div>
-                <p className="mt-3 text-center text-[0.7rem] text-muted">Calls and messages are handled by the {SITE.name} desk.</p>
-              </div>
-              <div className="border border-line bg-white p-6">
-                <h2 className="mb-5 text-xl text-forest">Send an enquiry</h2>
-                <EnquiryForm property={p} compact />
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-
-      {similar.data?.length > 0 && (
-        <section className="border-t border-line bg-white">
-          <div className="container-x py-16">
-            <SectionHead eyebrow="You may also like" title="Similar properties" />
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{similar.data.map((s) => <PropertyCard key={s.id} property={s} />)}</div>
-          </div>
-        </section>
-      )}
-    </>
+      <Textarea label="Message" rows={3} value={v.message} onChange={set('message')} error={errors.message} required />
+      <Button type="submit" loading={busy} className="w-full" size="lg">Send enquiry</Button>
+    </form>
   )
 }
 
 export default function PropertyDetail() {
   const { slug } = useParams()
-  const { data, loading, error, reload } = useAsync(() => getProperty(slug), [slug])
+  const { saved, toggleSave } = useApp()
+  const { data: p, loading } = useAsync(() => getProperty(slug), [slug])
+  const { data: similar } = useAsync(() => (p ? similarProperties(p) : Promise.resolve([])), [p?.id])
 
-  if ((loading && !data) || (data && data.slug !== slug)) return <DetailSkeleton />
-  if (error?.message === 'NOT_FOUND') return <NotFound />
-  if (error) return <div className="container-x py-16"><ErrorState onRetry={reload} /></div>
-  if (!data) return null
-  return <Detail key={data.id} p={data} />
+  const cat = p ? categoryBySlug[p.category] : null
+  useSeo(
+    p
+      ? {
+          title: `${p.title} for Rent in ${p.locality}, Jaipur`,
+          description: `${cat?.single} for rent in ${p.locality}, Jaipur at ${formatPrice(p.rent)}/month. ${p.description.slice(0, 110)}`,
+          path: `/property/${p.slug}`,
+          image: p.images?.[0]?.startsWith('http') ? p.images[0] : undefined,
+          noindex: p.status !== 'approved',
+          jsonLd: {
+            '@context': 'https://schema.org',
+            '@type': 'Accommodation',
+            name: p.title,
+            description: p.description,
+            address: { '@type': 'PostalAddress', addressLocality: p.locality, addressRegion: 'Rajasthan', addressCountry: 'IN' },
+            offers: { '@type': 'Offer', price: p.rent, priceCurrency: 'INR' },
+          },
+        }
+      : { title: 'Property', noindex: true },
+  )
+
+  if (loading) return <Spinner />
+  if (!p) {
+    return (
+      <div className="container-x py-16">
+        <Empty title="Listing not found" text="This property may have been rented out or removed." action={<Button to="/rentals">Browse rentals</Button>} />
+      </div>
+    )
+  }
+
+  const isSaved = saved.includes(p.id)
+  const phone = cleanPhone(p.ownerPhone)
+  const waText = `Hi ${p.ownerName?.split(' ')[0] || ''}, I saw "${p.title}" (${formatPrice(p.rent)}/month) on ${SITE.name}. Is it available?`
+
+  const share = async () => {
+    const url = window.location.href
+    try {
+      if (navigator.share) await navigator.share({ title: p.title, url })
+      else {
+        await navigator.clipboard.writeText(url)
+        toast.success('Link copied')
+      }
+    } catch {
+      /* cancelled */
+    }
+  }
+
+  const facts = [
+    p.bhk && { icon: BedDouble, label: 'Bedrooms', value: `${p.bhk} BHK` },
+    p.area && { icon: Maximize2, label: 'Area', value: formatArea(p.area) },
+    { icon: Bath, label: 'Bathrooms', value: p.bathrooms },
+    p.floor && { icon: Layers, label: 'Floor', value: p.floor },
+    { icon: Sofa, label: 'Furnishing', value: furnishingLabel(p.furnishing) },
+    { icon: CalendarDays, label: 'Available', value: p.availableFrom },
+    p.tenants && { icon: Users, label: 'Preferred', value: p.tenants },
+  ].filter(Boolean)
+
+  return (
+    <div className="container-x py-8">
+      <nav className="mb-4 text-xs font-semibold text-muted" aria-label="Breadcrumb">
+        <Link to="/" className="hover:text-brand">Home</Link> / <Link to="/rentals" className="hover:text-brand">Rentals</Link> / <Link to={`/rentals?category=${p.category}`} className="hover:text-brand">{cat?.label}</Link>
+      </nav>
+
+      <div className="grid gap-8 lg:grid-cols-[1fr_24rem]">
+        <div className="min-w-0">
+          <Gallery p={p} />
+
+          <div className="mt-6 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="mb-2 flex flex-wrap gap-2">
+                <Badge tone="teal">{cat?.single}</Badge>
+                {p.verified && <Badge tone="green"><BadgeCheck size={13} /> Verified</Badge>}
+                {p.status !== 'approved' && <StatusBadge status={p.status} />}
+              </div>
+              <h1 className="text-2xl font-extrabold sm:text-3xl">{p.title}</h1>
+              <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted"><MapPin size={16} className="text-saffron-deep" /> {p.address}</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => toggleSave(p.id)} aria-pressed={isSaved}>
+                <Heart size={16} className={isSaved ? 'fill-red-500 text-red-500' : ''} /> {isSaved ? 'Saved' : 'Save'}
+              </Button>
+              <Button variant="outline" size="sm" onClick={share}><Share2 size={16} /> Share</Button>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {facts.map(({ icon: Icon, label, value }) => (
+              <div key={label} className="rounded-2xl border border-line bg-white p-3.5">
+                <Icon size={18} className="text-brand" />
+                <p className="mt-1.5 text-[0.72rem] font-bold uppercase tracking-wide text-muted">{label}</p>
+                <p className="text-sm font-bold">{value}</p>
+              </div>
+            ))}
+          </div>
+
+          <section className="mt-8">
+            <h2 className="mb-2 text-xl font-bold">About this property</h2>
+            <div className="prose-gk"><p>{p.description || 'The owner has not added a description yet.'}</p></div>
+          </section>
+
+          {p.amenities?.length > 0 && (
+            <section className="mt-6">
+              <h2 className="mb-3 text-xl font-bold">Amenities</h2>
+              <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {p.amenities.map((a) => (
+                  <li key={a} className="flex items-center gap-2 rounded-xl bg-white px-3 py-2.5 text-sm font-semibold ring-1 ring-line">
+                    <Check size={16} className="text-emerald-600" /> {a}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <section className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            <p className="font-bold">Rent safely</p>
+            <p className="mt-1">Visit the property in person and verify the owner before paying any deposit. Never transfer money for a home you have not seen.</p>
+          </section>
+        </div>
+
+        <aside className="space-y-5 lg:sticky lg:top-28 lg:h-fit">
+          <div className="card p-5">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted">Monthly rent</p>
+            <p className="font-display text-4xl font-extrabold text-brand-deep">{formatPrice(p.rent)}</p>
+            {pricePerSqft(p.rent, p.area) && <p className="text-xs text-muted">{pricePerSqft(p.rent, p.area)}</p>}
+            <dl className="mt-4 divide-y divide-line text-sm">
+              <div className="flex justify-between py-2"><dt className="text-muted">Security deposit</dt><dd className="font-bold">{formatRupees(p.deposit)}</dd></div>
+              <div className="flex justify-between py-2"><dt className="text-muted">Maintenance</dt><dd className="font-bold">{p.maintenance ? `${formatRupees(p.maintenance)}/mo` : 'Included'}</dd></div>
+              <div className="flex justify-between py-2"><dt className="text-muted">Listed on</dt><dd className="font-bold">{formatDate(p.listedAt)}</dd></div>
+            </dl>
+            <div className="mt-4 rounded-xl bg-sand p-3 text-sm">
+              <p className="text-xs text-muted">Listed by</p>
+              <p className="font-bold">{p.ownerName}</p>
+            </div>
+            <div className="mt-4 grid gap-2.5">
+              <Button href={`tel:+91${phone}`} size="lg" variant="dark"><Phone size={18} /> Call owner</Button>
+              <Button href={ownerWaLink(phone, waText)} target="_blank" rel="noreferrer" size="lg" variant="whatsapp"><MessageCircle size={18} /> WhatsApp</Button>
+            </div>
+            {p.demo && <p className="mt-3 text-center text-[0.72rem] text-muted">Sample listing with a placeholder number.</p>}
+          </div>
+          <EnquiryForm p={p} />
+        </aside>
+      </div>
+
+      {similar?.length > 0 && (
+        <section className="mt-14">
+          <h2 className="mb-5 text-2xl font-extrabold">Similar properties</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{similar.map((s) => <PropertyCard key={s.id} p={s} />)}</div>
+        </section>
+      )}
+    </div>
+  )
 }

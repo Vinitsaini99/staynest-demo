@@ -1,97 +1,78 @@
-import { BUDGETS, AREA_RANGES } from '../data/categories'
-import { locations } from '../data/locations'
-
-export const PAGE_SIZE = 9
+export const PAGE_SIZE = 12
 
 export const SORTS = [
-  { id: 'latest', label: 'Newest first' },
-  { id: 'price-asc', label: 'Price: Low to High' },
-  { id: 'price-desc', label: 'Price: High to Low' },
+  { value: 'new', label: 'Newest first' },
+  { value: 'low', label: 'Rent: low to high' },
+  { value: 'high', label: 'Rent: high to low' },
+  { value: 'area', label: 'Largest area' },
 ]
 
-export const DEFAULT_FILTERS = {
-  q: '', segment: '', category: '', locality: '', bhk: '', budget: 'any', minPrice: '', maxPrice: '',
-  area: '', furnishing: '', status: '', sharing: '', food: '', gender: '', verified: '', sort: 'latest', view: 'grid', page: 1,
+export const BUDGET_STEPS = [3000, 5000, 8000, 12000, 18000, 25000, 35000, 50000, 75000, 100000]
+
+export const EMPTY_FILTERS = {
+  q: '', category: '', locality: '', min: '', max: '', bhk: '', furnishing: '', verified: false, sort: 'new', page: 1,
 }
 
 export function parseFilters(sp) {
-  const f = { ...DEFAULT_FILTERS }
-  for (const key of Object.keys(DEFAULT_FILTERS)) {
-    const v = sp.get(key)
-    if (v !== null && v !== '') f[key] = key === 'page' ? Math.max(1, parseInt(v, 10) || 1) : v
+  const g = (k) => sp.get(k) || ''
+  return {
+    q: g('q'),
+    category: g('category'),
+    locality: g('locality'),
+    min: g('min'),
+    max: g('max'),
+    bhk: g('bhk'),
+    furnishing: g('furnishing'),
+    verified: g('verified') === '1',
+    sort: g('sort') || 'new',
+    page: Math.max(1, parseInt(g('page') || '1', 10) || 1),
   }
-  return f
 }
 
-// Serialise to URL params, dropping defaults.
 export function toParams(f) {
-  const p = new URLSearchParams()
-  for (const key of Object.keys(DEFAULT_FILTERS)) {
-    const v = f[key]
-    if (v === '' || v == null || v === DEFAULT_FILTERS[key]) continue
-    p.set(key, String(v))
-  }
-  return p
+  const sp = new URLSearchParams()
+  for (const k of ['q', 'category', 'locality', 'min', 'max', 'bhk', 'furnishing']) if (f[k]) sp.set(k, f[k])
+  if (f.verified) sp.set('verified', '1')
+  if (f.sort && f.sort !== 'new') sp.set('sort', f.sort)
+  if (f.page > 1) sp.set('page', String(f.page))
+  return sp
 }
 
-export const FILTER_KEYS = ['q', 'category', 'locality', 'bhk', 'budget', 'minPrice', 'maxPrice', 'area', 'furnishing', 'status', 'sharing', 'food', 'gender', 'verified']
+export const activeFilterCount = (f) =>
+  ['category', 'locality', 'min', 'max', 'bhk', 'furnishing'].filter((k) => f[k]).length + (f.verified ? 1 : 0)
 
-export function activeFilterCount(f) {
-  return FILTER_KEYS.filter((k) => f[k] !== '' && f[k] !== DEFAULT_FILTERS[k]).length
-}
-
-function priceBounds(f) {
-  let min = f.minPrice !== '' ? Number(f.minPrice) : null
-  let max = f.maxPrice !== '' ? Number(f.maxPrice) : null
-  const b = BUDGETS.find((x) => x.id === f.budget)
-  if (b && b.id !== 'any') {
-    min = min ?? b.min
-    max = max ?? b.max
-  }
-  return { min, max }
-}
-
-export function applyFilters(list, f, scope = {}) {
-  const { min, max } = priceBounds(f)
-  const area = AREA_RANGES.find((a) => a.id === f.area)
-  const cats = f.category ? f.category.split(',') : null
+export function applyFilters(list, f) {
   const q = f.q.trim().toLowerCase()
-  const localityName = (slug) => locations.find((l) => l.slug === slug)?.name.toLowerCase() || ''
-
-  const out = list.filter((p) => {
-    if (scope.segment && p.segment !== scope.segment) return false
-    if (scope.categories && !scope.categories.includes(p.category)) return false
-    if (f.segment && p.segment !== f.segment) return false
-    if (cats && !cats.includes(p.category)) return false
+  const min = Number(f.min) || 0
+  const max = Number(f.max) || Infinity
+  let out = list.filter((p) => {
+    if (f.category && p.category !== f.category) return false
     if (f.locality && p.locality !== f.locality) return false
-    if (f.bhk) {
-      const n = Number(f.bhk)
-      if (n >= 4 ? p.bhk < 4 : p.bhk !== n) return false
-    }
-    const price = f.sharing && p.sharingPrices ? p.sharingPrices[f.sharing] : p.price
-    if (min != null && price < min) return false
-    if (max != null && price > max) return false
-    if (area) {
-      if (p.areaSqft < area.min) return false
-      if (area.max != null && p.areaSqft > area.max) return false
-    }
+    if (p.rent < min || p.rent > max) return false
     if (f.furnishing && p.furnishing !== f.furnishing) return false
-    if (f.status && p.status !== f.status) return false
-    if (f.sharing && !(p.sharing || []).includes(f.sharing)) return false
-    if (f.food && !p.food) return false
-    if (f.gender && p.gender !== f.gender) return false
     if (f.verified && !p.verified) return false
+    if (f.bhk) {
+      if (!p.bhk) return false
+      if (f.bhk === '4+' ? p.bhk < 4 : p.bhk !== Number(f.bhk)) return false
+    }
     if (q) {
-      const hay = `${p.title} ${p.address} ${p.propertyType} ${localityName(p.locality)} ${p.description}`.toLowerCase()
+      const hay = `${p.title} ${p.locality} ${p.address} ${p.category} ${p.description}`.toLowerCase()
       if (!q.split(/\s+/).every((w) => hay.includes(w))) return false
     }
     return true
   })
+  const by = {
+    new: (a, b) => new Date(b.listedAt) - new Date(a.listedAt),
+    low: (a, b) => a.rent - b.rent,
+    high: (a, b) => b.rent - a.rent,
+    area: (a, b) => (b.area || 0) - (a.area || 0),
+  }[f.sort] || ((a, b) => new Date(b.listedAt) - new Date(a.listedAt))
+  out = [...out].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || by(a, b))
+  return out
+}
 
-  const sorters = {
-    latest: (a, b) => new Date(b.listedAt) - new Date(a.listedAt),
-    'price-asc': (a, b) => a.price - b.price,
-    'price-desc': (a, b) => b.price - a.price,
-  }
-  return out.sort(sorters[f.sort] || sorters.latest)
+export function paginate(list, page, size = PAGE_SIZE) {
+  const pages = Math.max(1, Math.ceil(list.length / size))
+  const p = Math.min(Math.max(1, page), pages)
+  return { items: list.slice((p - 1) * size, p * size), total: list.length, page: p, pages }
 }
