@@ -15,8 +15,8 @@ function Page({ title, path, description, children }) {
 
 export function About() {
   return (
-    <Page title="About GharKhoj Jaipur" path="/about" description="GharKhoj Jaipur helps renters and owners connect directly for flats, houses, offices and sharing rooms in Jaipur.">
-      <p>{SITE.name} is a rental portal built for Jaipur. We help tenants find flats, independent houses, commercial offices and sharing rooms, and help owners reach serious renters without paying a broker.</p>
+    <Page title="About GharKhoj Kota" path="/about" description="GharKhoj Kota helps renters and owners connect directly for flats, houses, offices and sharing rooms in Kota.">
+      <p>{SITE.name} is a rental portal built for Kota. We help tenants find flats, independent houses, commercial offices and sharing rooms, and help owners reach serious renters without paying a broker.</p>
       <h2>How we work</h2>
       <ul>
         <li>Owners list properties for free from their own dashboard.</li>
@@ -32,7 +32,7 @@ export function About() {
 
 export function Privacy() {
   return (
-    <Page title="Privacy Policy" path="/privacy" description="How GharKhoj Jaipur handles your personal information.">
+    <Page title="Privacy Policy" path="/privacy" description="How GharKhoj Kota handles your personal information.">
       <p>This policy explains what information {SITE.name} collects and how it is used. It is a template; have it reviewed before launch.</p>
       <h2>Information we collect</h2>
       <ul>
@@ -50,7 +50,7 @@ export function Privacy() {
 
 export function Terms() {
   return (
-    <Page title="Terms of Use" path="/terms" description="The terms for using GharKhoj Jaipur.">
+    <Page title="Terms of Use" path="/terms" description="The terms for using GharKhoj Kota.">
       <p>By using {SITE.name} you agree to these terms. This is a template; have it reviewed before launch.</p>
       <h2>Listings</h2>
       <p>Owners are responsible for the accuracy of their listings. We may approve, reject or remove listings at our discretion.</p>

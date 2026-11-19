@@ -28,7 +28,7 @@ function setCanonical(href) {
 export function useSeo({ title, description, path = '', image, type = 'website', noindex = false, jsonLd } = {}) {
   const ld = jsonLd ? JSON.stringify(jsonLd) : ''
   useEffect(() => {
-    const fullTitle = title ? (title.includes(SITE.name) ? title : `${title} | ${SITE.name}`) : `${SITE.name} – Rentals in Jaipur`
+    const fullTitle = title ? (title.includes(SITE.name) ? title : `${title} | ${SITE.name}`) : `${SITE.name} – Rentals in Kota`
     const url = `${SITE.url}${path}`
     const desc = description || SITE.tagline
     const img = image || `${SITE.url}/favicon.svg`

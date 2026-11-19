@@ -8,4 +8,4 @@ Disallow: /login
 Disallow: /register
 Disallow: /verify-email
 
-Sitemap: https://gharkhoj-jaipur.vercel.app/sitemap.xml
+Sitemap: https://gharkhoj-kota.vercel.app/sitemap.xml

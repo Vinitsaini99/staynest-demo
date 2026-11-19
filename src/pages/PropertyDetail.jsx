@@ -98,8 +98,8 @@ export default function PropertyDetail() {
   useSeo(
     p
       ? {
-          title: `${p.title} for Rent in ${p.locality}, Jaipur`,
-          description: `${cat?.single} for rent in ${p.locality}, Jaipur at ${formatPrice(p.rent)}/month. ${p.description.slice(0, 110)}`,
+          title: `${p.title} for Rent in ${p.locality}, Kota`,
+          description: `${cat?.single} for rent in ${p.locality}, Kota at ${formatPrice(p.rent)}/month. ${p.description.slice(0, 110)}`,
           path: `/property/${p.slug}`,
           image: p.images?.[0]?.startsWith('http') ? p.images[0] : undefined,
           noindex: p.status !== 'approved',

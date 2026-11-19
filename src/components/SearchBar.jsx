@@ -47,7 +47,7 @@ export default function SearchBar() {
           <MapPin size={18} className="shrink-0 text-saffron-deep" />
           <span className="sr-only">Area</span>
           <select value={f.locality} onChange={set('locality')} className={control}>
-            <option value="">Which area? (All Jaipur)</option>
+            <option value="">Which area? (All Kota)</option>
             {localityNames.map((n) => <option key={n}>{n}</option>)}
           </select>
         </label>
@@ -64,7 +64,7 @@ export default function SearchBar() {
         <label className={wrap}>
           <Search size={18} className="shrink-0 text-saffron-deep" />
           <span className="sr-only">Keyword</span>
-          <input value={f.q} onChange={set('q')} placeholder="Keyword: metro, parking, boys…" className={control} />
+          <input value={f.q} onChange={set('q')} placeholder="Keyword: coaching, parking, boys…" className={control} />
         </label>
 
         <button type="submit" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-saffron px-8 text-sm font-extrabold text-ink transition-colors hover:bg-amber-400 sm:col-span-2 lg:col-span-1">

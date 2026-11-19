@@ -46,7 +46,7 @@ export default function PropertyCard({ p, className = '' }) {
           <Link to={`/property/${p.slug}`} className="hover:text-brand">{p.title}</Link>
         </h3>
         <p className="mt-1 flex items-center gap-1 text-[0.82rem] text-muted">
-          <MapPin size={14} className="shrink-0 text-saffron-deep" /> <span className="truncate">{p.locality}, Jaipur</span>
+          <MapPin size={14} className="shrink-0 text-saffron-deep" /> <span className="truncate">{p.locality}, Kota</span>
         </p>
 
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.8rem] font-semibold text-ink-soft">

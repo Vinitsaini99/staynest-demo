@@ -101,7 +101,7 @@ export default function ListingForm() {
       <form onSubmit={submit} className="mt-8 space-y-6" noValidate>
         <section className="card space-y-4 p-6">
           <h2 className="text-lg font-bold">Basics</h2>
-          <Input label="Listing title" value={v.title} onChange={set('title')} error={errors.title} placeholder="e.g. Sunlit 2 BHK near metro" required />
+          <Input label="Listing title" value={v.title} onChange={set('title')} error={errors.title} placeholder="e.g. Sunlit 2 BHK near coaching hub" required />
           <div className="grid gap-4 sm:grid-cols-2">
             <Select label="Property type" value={v.category} onChange={set('category')} options={categories.map((c) => ({ value: c.slug, label: c.single }))} />
             <Select label="Locality" value={v.locality} onChange={set('locality')} options={localityNames} placeholder="Select locality" error={errors.locality} required />

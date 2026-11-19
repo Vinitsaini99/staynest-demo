@@ -9,7 +9,7 @@ import { SITE, waLink } from '../config/site'
 import { cleanPhone, emailRule, minLen, phoneRule, validate } from '../utils/validation'
 
 export default function Contact() {
-  useSeo({ title: 'Contact us', description: `Talk to the ${SITE.name} team about renting or listing a property in Jaipur.`, path: '/contact' })
+  useSeo({ title: 'Contact us', description: `Talk to the ${SITE.name} team about renting or listing a property in Kota.`, path: '/contact' })
   const [v, setV] = useState({ name: '', email: '', phone: '', message: '' })
   const [errors, setErrors] = useState({})
   const [busy, setBusy] = useState(false)

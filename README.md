@@ -1,6 +1,6 @@
-# GharKhoj Jaipur
+# GharKhoj Kota
 
-A rental portal for Jaipur: flats, independent houses, commercial offices and sharing rooms. Built with React 19, Vite, Tailwind CSS v4 and React Router.
+A rental portal for Kota: flats, independent houses, commercial offices and sharing rooms. Built with React 19, Vite, Tailwind CSS v4 and React Router.
 
 ## Run locally
 

@@ -10,7 +10,7 @@ const K = {
   users: 'gk_users',
   session: 'gk_session',
   listings: 'gk_listings',
-  seeded: 'gk_seeded_v1',
+  seeded: 'gk_seeded_v2',
   enquiries: 'gk_enquiries',
   messages: 'gk_messages',
   saved: 'gk_saved',

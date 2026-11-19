@@ -34,7 +34,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
       <div>
         <label className={lbl} htmlFor="f-locality">Locality</label>
         <select id="f-locality" className="field" value={filters.locality} onChange={(e) => set({ locality: e.target.value })}>
-          <option value="">All of Jaipur</option>
+          <option value="">All of Kota</option>
           {localityNames.map((n) => <option key={n}>{n}</option>)}
         </select>
       </div>

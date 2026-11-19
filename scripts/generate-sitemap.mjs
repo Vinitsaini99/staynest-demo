@@ -7,7 +7,7 @@ import { seedProperties } from '../src/data/properties.js'
 import { localities } from '../src/data/localities.js'
 import { categories } from '../src/data/categories.js'
 
-const SITE = (process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://gharkhoj-jaipur.vercel.app').replace(/\/$/, '')
+const SITE = (process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://gharkhoj-kota.vercel.app').replace(/\/$/, '')
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const today = new Date().toISOString().slice(0, 10)
 

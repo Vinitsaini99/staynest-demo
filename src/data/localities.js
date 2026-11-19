@@ -1,15 +1,15 @@
 export const localities = [
-  { name: 'Malviya Nagar', blurb: 'Established, well connected, close to malls and the metro.' },
-  { name: 'Vaishali Nagar', blurb: 'Popular with families; markets, schools and cafes nearby.' },
-  { name: 'Mansarovar', blurb: 'Large residential hub with the metro and many budget options.' },
-  { name: 'Jagatpura', blurb: 'Fast-growing area near the railway station and tech offices.' },
-  { name: 'C-Scheme', blurb: 'Central address with premium homes and corporate offices.' },
-  { name: 'Raja Park', blurb: 'Lively market area, favoured by students and young renters.' },
-  { name: 'Sodala', blurb: 'Quiet lanes, good value and easy city access.' },
-  { name: 'Tonk Road', blurb: 'Main arterial road with colleges, hospitals and shops.' },
-  { name: 'Bani Park', blurb: 'Old-city character with heritage charm and calm streets.' },
-  { name: 'Jhotwara', blurb: 'Affordable rentals with growing infrastructure.' },
-  { name: 'Pratap Nagar', blurb: 'Planned colonies near Sanganer and the airport.' },
+  { name: 'Rajiv Gandhi Nagar', blurb: 'Busy coaching-belt colony with PGs, messes and markets on every lane.' },
+  { name: 'Talwandi', blurb: 'Central residential area close to coaching institutes and hospitals.' },
+  { name: 'Mahaveer Nagar', blurb: 'Well-developed colony with flats, shops and easy access to the main road.' },
+  { name: 'Vigyan Nagar', blurb: 'Planned area with good parking, popular with students and families.' },
+  { name: 'Indra Vihar', blurb: 'Student hub with hostels, libraries and cafes within walking distance.' },
+  { name: 'Landmark City', blurb: 'Coaching township on Kunhadi Road with hostels and sharing rooms.' },
+  { name: 'Kunhadi', blurb: 'Fast-growing stretch with new apartments and budget rentals.' },
+  { name: 'Gumanpura', blurb: 'Established market area with houses, offices and city connectivity.' },
+  { name: 'Dadabari', blurb: 'Quiet, family-friendly colonies with parks and schools nearby.' },
+  { name: 'Borkhera', blurb: 'Affordable homes near the railway station and bus stand.' },
+  { name: 'Jawahar Nagar', blurb: 'Central address with banks, clinics and commercial spaces.' },
 ]
 
 export const localityNames = localities.map((l) => l.name)

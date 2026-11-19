@@ -7,7 +7,7 @@ export default function AuthShell({ title, subtitle, children, footer, dark = fa
       <div className="hidden lg:block">
         <Logo />
         <h2 className="mt-6 text-4xl font-extrabold leading-tight">
-          {dark ? 'Manage the portal' : <>Your Jaipur rental search, <span className="text-brand">organised</span></>}
+          {dark ? 'Manage the portal' : <>Your Kota rental search, <span className="text-brand">organised</span></>}
         </h2>
         <ul className="mt-6 space-y-4 text-ink-soft">
           {[

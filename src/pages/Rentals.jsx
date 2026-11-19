@@ -21,10 +21,10 @@ export default function Rentals() {
   useEffect(() => setQ(filters.q), [filters.q])
 
   const cat = categoryBySlug[filters.category]
-  const heading = `${cat ? cat.label : 'Rentals'} ${filters.locality ? `in ${filters.locality}, ` : 'in '}Jaipur`.replace(', Jaipur', ', Jaipur')
+  const heading = `${cat ? cat.label : 'Rentals'} ${filters.locality ? `in ${filters.locality}, ` : 'in '}Kota`.replace(', Kota', ', Kota')
   useSeo({
     title: heading,
-    description: `Browse ${cat ? cat.label.toLowerCase() : 'flats, houses, offices and sharing rooms'} for rent${filters.locality ? ` in ${filters.locality}` : ' in Jaipur'}. Filter by budget, BHK and furnishing.`,
+    description: `Browse ${cat ? cat.label.toLowerCase() : 'flats, houses, offices and sharing rooms'} for rent${filters.locality ? ` in ${filters.locality}` : ' in Kota'}. Filter by budget, BHK and furnishing.`,
     path: '/rentals',
     noindex: sp.toString().length > 0 && !!(filters.q || filters.page > 1),
   })

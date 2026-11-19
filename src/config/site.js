@@ -1,20 +1,20 @@
 // Site-wide settings. Replace the placeholder contact details before going live.
 export const SITE = {
-  name: 'GharKhoj Jaipur',
+  name: 'GharKhoj Kota',
   short: 'GharKhoj',
-  url: (import.meta.env.VITE_SITE_URL || 'https://gharkhoj-jaipur.vercel.app').replace(/\/$/, ''),
-  tagline: 'Verified rentals in Jaipur: flats, independent houses, offices and sharing rooms with direct owner contact.',
-  city: 'Jaipur',
+  url: (import.meta.env.VITE_SITE_URL || 'https://gharkhoj-kota.vercel.app').replace(/\/$/, ''),
+  tagline: 'Verified rentals in Kota: flats, independent houses, offices and sharing rooms with direct owner contact.',
+  city: 'Kota',
   state: 'Rajasthan',
   phone: '+91 90000 00000',
   phoneTel: '+919000000000',
   whatsapp: '919000000000',
   email: 'hello@gharkhoj.example',
-  address: 'Jaipur, Rajasthan, India',
+  address: 'Kota, Rajasthan, India',
   hours: '9:00 AM to 8:00 PM, all days',
 }
 
-export const waLink = (text = 'Hi, I found your listing on GharKhoj Jaipur.') =>
+export const waLink = (text = 'Hi, I found your listing on GharKhoj Kota.') =>
   `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`
 
 export const ownerWaLink = (phone, text) => {

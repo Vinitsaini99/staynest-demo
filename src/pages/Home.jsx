@@ -35,7 +35,7 @@ const WHY = [
   { icon: BadgeCheck, title: 'Verified listings', text: 'Our team reviews every listing before it goes live, and checked homes carry an Approved badge.' },
   { icon: PhoneCall, title: 'Direct owner contact', text: 'Call or WhatsApp the owner from the listing page. No broker commission and no middlemen.' },
   { icon: Wallet, title: 'Transparent pricing', text: 'Rent, deposit and maintenance are shown on every listing, so there are no surprises later.' },
-  { icon: MapPinned, title: 'All localities covered', text: 'Malviya Nagar, Vaishali Nagar, Mansarovar, Jagatpura, Sodala and more across Jaipur.' },
+  { icon: MapPinned, title: 'All localities covered', text: 'Rajiv Gandhi Nagar, Talwandi, Vigyan Nagar, Indra Vihar, Landmark City and more across Kota.' },
 ]
 
 const STEPS = [
@@ -46,8 +46,8 @@ const STEPS = [
 
 export default function Home() {
   useSeo({
-    title: 'Flats, Houses, Offices & Sharing Rooms for Rent in Jaipur',
-    description: 'Browse rental flats, independent houses, commercial offices and sharing rooms in Jaipur with direct owner contact and clear pricing.',
+    title: 'Flats, Houses, Offices & Sharing Rooms for Rent in Kota',
+    description: 'Browse rental flats, independent houses, commercial offices and sharing rooms in Kota with direct owner contact and clear pricing.',
     path: '/',
   })
   const { data: sum } = useAsync(getSummary, [])
@@ -67,10 +67,10 @@ export default function Home() {
 
         <div className="container-x relative flex min-h-[calc(100svh-7rem)] flex-col items-center justify-center py-10 text-center sm:py-14">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold backdrop-blur">
-            <MapPinned size={14} className="text-saffron" /> Made for Jaipur renters
+            <MapPinned size={14} className="text-saffron" /> Made for Kota renters
           </span>
           <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.4rem]">
-            Find your next <span className="text-saffron">rental home</span> in the Pink City
+            Find your next <span className="text-saffron">rental home</span> in Kota
           </h1>
           <p className="mt-3 max-w-2xl text-base text-white/75 sm:text-lg">
             Pick the type, choose your area and budget, and see matching homes, PGs and offices in seconds.
@@ -155,7 +155,7 @@ export default function Home() {
 
       {/* Localities */}
       <section className="container-x pt-20">
-        <SectionHead eyebrow="Explore" title="Popular localities in Jaipur" />
+        <SectionHead eyebrow="Explore" title="Popular localities in Kota" />
         <div className="flex flex-wrap gap-3">
           {localities.map((l) => (
             <Link key={l.name} to={`/rentals?locality=${encodeURIComponent(l.name)}`} className="chip !px-4 !py-2.5 text-sm" title={l.blurb}>
@@ -173,11 +173,11 @@ export default function Home() {
           <div className="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
             <div>
               <h2 className="text-3xl font-extrabold sm:text-4xl">Have a property to rent out?</h2>
-              <p className="mt-2 max-w-xl text-white/80">List it free, reach serious tenants in Jaipur and manage enquiries from your own dashboard.</p>
+              <p className="mt-2 max-w-xl text-white/80">List it free, reach serious tenants in Kota and manage enquiries from your own dashboard.</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button to="/register?role=seller" variant="saffron" size="lg">List your property</Button>
-              <Button href={waLink('Hi, I want to list my property on GharKhoj Jaipur.')} target="_blank" rel="noreferrer" variant="whatsapp" size="lg">
+              <Button href={waLink('Hi, I want to list my property on GharKhoj Kota.')} target="_blank" rel="noreferrer" variant="whatsapp" size="lg">
                 <MessageCircle size={18} /> WhatsApp us
               </Button>
             </div>

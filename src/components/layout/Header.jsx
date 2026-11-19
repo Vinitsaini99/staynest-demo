@@ -33,7 +33,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-line bg-cream/90 backdrop-blur-lg">
       <div className="hidden bg-ink text-xs text-white/80 md:block">
         <div className="container-x flex items-center justify-between py-1.5">
-          <span>Direct-from-owner rentals across Jaipur</span>
+          <span>Direct-from-owner rentals across Kota</span>
           <a href={`tel:${SITE.phoneTel}`} className="inline-flex items-center gap-1.5 font-bold text-saffron"><Phone size={12} /> {SITE.phone}</a>
         </div>
       </div>
