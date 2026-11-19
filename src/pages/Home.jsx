@@ -58,52 +58,45 @@ export default function Home() {
       <section className="relative overflow-hidden bg-ink text-white">
         <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand/40 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 left-1/4 h-80 w-80 rounded-full bg-saffron/20 blur-3xl" />
-        <div className="container-x relative grid items-center gap-10 py-14 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold backdrop-blur">
-              <MapPinned size={14} className="text-saffron" /> Made for Jaipur renters
-            </span>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.4rem]">
-              Find your next <span className="text-saffron">rental home</span> in the Pink City
-            </h1>
-            <p className="mt-4 max-w-xl text-base text-white/75 sm:text-lg">
-              Search approved rental listings, compare rents side by side and contact owners instantly across Malviya Nagar, Vaishali Nagar, Mansarovar and more.
-            </p>
-            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/85">
-              {['No brokers', 'No hidden charges', 'Direct owner contact'].map((t) => (
-                <li key={t} className="inline-flex items-center gap-1.5"><BadgeCheck size={16} className="text-saffron" /> {t}</li>
-              ))}
-            </ul>
-            <div className="mt-7 flex flex-wrap gap-6 text-sm">
-              {[
-                [sum?.total ?? '—', 'live listings'],
-                [localities.length, 'localities'],
-                [categories.length, 'property types'],
-              ].map(([v, l]) => (
-                <div key={l}>
-                  <p className="font-display text-3xl font-extrabold text-saffron">{v}</p>
-                  <p className="text-white/60">{l}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative hidden lg:block">
-            <div className="floaty mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[2rem] border-4 border-white/15 shadow-lift">
-              <PropertyArt category="independent-house" seed="hero" />
-            </div>
-            <div className="absolute -bottom-5 -left-4 rounded-2xl bg-white p-3.5 text-ink shadow-lift">
-              <p className="text-xs font-bold text-muted">Starting from</p>
-              <p className="font-display text-2xl font-extrabold text-brand-deep">₹4,500<span className="text-xs font-semibold text-muted">/mo</span></p>
-            </div>
-          </div>
+        <div className="pointer-events-none absolute -left-10 bottom-6 hidden w-64 -rotate-6 overflow-hidden rounded-3xl opacity-25 lg:block xl:w-72">
+          <PropertyArt category="flat" seed="hero-a" />
         </div>
-        <div className="h-10 lg:h-12" />
-      </section>
+        <div className="pointer-events-none absolute -right-8 top-10 hidden w-64 rotate-6 overflow-hidden rounded-3xl opacity-25 lg:block xl:w-72">
+          <PropertyArt category="independent-house" seed="hero-b" />
+        </div>
 
-      <div className="container-x relative z-10 -mt-14 lg:-mt-16">
-        <SearchBar />
-      </div>
+        <div className="container-x relative flex min-h-[calc(100svh-7rem)] flex-col items-center justify-center py-10 text-center sm:py-14">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold backdrop-blur">
+            <MapPinned size={14} className="text-saffron" /> Made for Jaipur renters
+          </span>
+          <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.4rem]">
+            Find your next <span className="text-saffron">rental home</span> in the Pink City
+          </h1>
+          <p className="mt-3 max-w-2xl text-base text-white/75 sm:text-lg">
+            Pick the type, choose your area and budget, and see matching homes, PGs and offices in seconds.
+          </p>
+
+          <div className="mt-7 w-full max-w-5xl text-left">
+            <SearchBar />
+          </div>
+
+          <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-white/55">Popular areas:</span>
+            {localities.slice(0, 7).map((l) => (
+              <Link key={l.name} to={`/rentals?locality=${encodeURIComponent(l.name)}`} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white/90 backdrop-blur transition-colors hover:border-saffron hover:text-saffron">
+                {l.name}
+              </Link>
+            ))}
+          </div>
+
+          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-white/85">
+            {['No brokers', 'No hidden charges', 'Direct owner contact'].map((t) => (
+              <li key={t} className="inline-flex items-center gap-1.5"><BadgeCheck size={16} className="text-saffron" /> {t}</li>
+            ))}
+            <li className="inline-flex items-center gap-1.5 text-saffron">{sum?.total ?? '—'} live listings</li>
+          </ul>
+        </div>
+      </section>
 
       {/* Category tiles */}
       <section className="container-x pt-14">
